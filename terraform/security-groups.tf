@@ -266,6 +266,15 @@ resource "aws_security_group" "ecr_security_group" {
     description = "Allow inbound HTTPS requests from MHS tasks"
   }
 
+  ingress {
+    from_port = 443
+    to_port = 443
+    protocol = "tcp"
+    # Allow requests from GoCD agent
+    cidr_blocks = [ var.vpn_subnet ]
+    description = "Allow inbound HTTPS requests from GoCD agent"
+  }
+
   tags = {
     Name = "${var.environment_id}-ecr-endpoint-sg"
     EnvironmentId = var.environment_id
