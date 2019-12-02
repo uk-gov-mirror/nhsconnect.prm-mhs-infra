@@ -1,0 +1,100 @@
+#!/bin/bash
+
+set -Eeo pipefail
+
+NHS_SERVICE=mhs
+AWS_REGION=eu-west-2
+
+function tf_plan {
+  operation=$1
+
+  cd terraform/
+  terraform init -backend-config key=${NHS_SERVICE}/terraform.tfstate
+  terraform get # modules
+  if [[ "${operation}" == "create" ]]; then
+    terraform plan -var-file=${NHS_ENVIRONMENT}.tfvars -out="nhs_deployment.tfplan"
+  elif [[ "${operation}" == "destroy" ]]; then
+    terraform plan -var-file=${NHS_ENVIRONMENT}.tfvars -out="nhs_deployment.tfplan" -destroy
+  else
+    echo "Unknown operation (should be create or destroy), got: ${operation}"
+    exit 1
+  fi
+}
+
+function tf_apply {
+  cd terraform/
+  terraform init -backend-config key=${NHS_SERVICE}/terraform.tfstate
+  terraform get # modules
+  terraform apply nhs_deployment.tfplan
+  terraform output -json > tf-out.json
+}
+
+function check_env {
+  if [[ -z "${NHS_ENVIRONMENT}" ]]; then
+    echo "Must set NHS_ENVIRONMENT"
+    exit 1
+  fi
+}
+
+function generate_ssh_key {
+  secret_id="/NHS/deductions/mhs-opentest/id_rsa"
+  ssh_directory=terraform/transit-opentest/ssh
+  mkdir -p ${ssh_directory}/
+  if [[ ! -f "${ssh_directory}/id_rsa" ]]; then
+    #TODO check aws authentication
+    set +e
+    id_rsa=$(aws ssm get-parameter --with-decryption --region $AWS_REGION --name $secret_id | jq -r ".Parameter.Value")
+    if [[ $? == 0 ]]; then
+      echo "$id_rsa" > ${ssh_directory}/id_rsa
+    else
+      set -e
+      ssh-keygen -f "${ssh_directory}/id_rsa" -q -N ""
+    fi
+    set -e
+  fi
+  chmod 0600 ${ssh_directory}/id_rsa
+  ssh-keygen -y -f "${ssh_directory}/id_rsa" > "${ssh_directory}/id_rsa.pub"
+  aws ssm put-parameter \
+   --region $AWS_REGION \
+   --name $secret_id \
+   --type SecureString \
+   --overwrite \
+   --value "`cat ${ssh_directory}/id_rsa`"
+}
+
+command="$1"
+case "${command}" in
+  _ssh_key)
+      check_env
+      generate_ssh_key
+      ;;
+  ssh_key)
+      dojo "./tasks _ssh_key"
+      ;;
+  tf)
+      check_env
+      ./tasks ssh_key
+      dojo "bash"
+      ;;
+  _tf_plan)
+      tf_plan "$2"
+      ;;
+  tf_plan)
+      check_env
+      ./tasks ssh_key
+      dojo "./tasks _tf_plan $2"
+      ;;
+  _tf_apply)
+      tf_apply
+      ;;
+  tf_apply)
+      check_env
+      ./tasks ssh_key
+      dojo "./tasks _tf_apply"
+      ;;
+  *)
+      echo "Invalid command: '${command}'"
+      exit 1
+      ;;
+esac
+set +e

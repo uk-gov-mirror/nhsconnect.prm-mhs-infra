@@ -1,1 +1,4 @@
 /terraform/transit-opentest/ssh/
+/terraform/nhs_deployment.tfplan
+/terraform/.terraform/
+/terraform/tf-out.json
