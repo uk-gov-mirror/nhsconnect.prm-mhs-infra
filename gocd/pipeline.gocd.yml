@@ -6,6 +6,11 @@ pipelines:
     materials:
       git:
         type: configrepo
+        destination: prm-mhs-infra
+      integration_adaptors:
+        git: https://github.com/tomzo/integration-adaptors.git
+        branch: deductions
+        destination: integration-adaptors
     environment_variables:
       NHS_ENVIRONMENT: opentest
     stages:
@@ -18,11 +23,26 @@ pipelines:
               tasks:
                 - exec:
                     command: /bin/bash
+                    working_directory: prm-mhs-infra
                     arguments:
                       - -c
                       - ./tasks tf_plan create
                 - exec:
                     command: /bin/bash
+                    working_directory: prm-mhs-infra
                     arguments:
                       - -c
                       - ./tasks tf_apply
+      - test:
+          clean_workspace: true
+          jobs:
+            e2e:
+              resources:
+                - mhs-opentest
+              tasks:
+                - exec:
+                    command: /bin/bash
+                    working_directory: integration-adaptors
+                    arguments:
+                      - -c
+                      - ./tasks e2e_tests
