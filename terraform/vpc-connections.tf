@@ -36,8 +36,16 @@ resource "aws_vpc_peering_connection" "supplier_peering_connection" {
 }
 
 # Add a route to the MHS VPC in the supplier VPC route table
-resource "aws_route" "supplier_to_mhs_route" {
-  route_table_id = data.aws_vpc.supplier_vpc.main_route_table_id
+data "aws_ssm_parameter" "private_rtb" {
+    name = "/NHS/${var.deductions_env}-${data.aws_caller_identity.current.account_id}/tf/deductions_private/private_rtb"
+}
+
+data "aws_ssm_parameter" "public_rtb" {
+    name = "/NHS/${var.deductions_env}-${data.aws_caller_identity.current.account_id}/tf/deductions_private/public_rtb"
+}
+
+resource "aws_route" "private_supplier_to_mhs_route" {
+  route_table_id = data.aws_ssm_parameter.private_rtb.value
   destination_cidr_block = aws_vpc.mhs_vpc.cidr_block
   vpc_peering_connection_id = aws_vpc_peering_connection.supplier_peering_connection.id
 }
