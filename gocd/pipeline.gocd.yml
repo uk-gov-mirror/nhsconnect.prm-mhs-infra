@@ -11,6 +11,9 @@ pipelines:
         git: https://github.com/tomzo/integration-adaptors.git
         branch: deductions
         destination: integration-adaptors
+      docker:
+        pipeline: mhs-docker-images
+        stage: build
     environment_variables:
       NHS_ENVIRONMENT: opentest
     stages:
