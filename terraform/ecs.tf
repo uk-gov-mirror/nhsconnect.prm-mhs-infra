@@ -180,7 +180,7 @@ resource "aws_ecs_task_definition" "mhs_inbound_task" {
         },
         {
           name = "MHS_INBOUND_QUEUE_URL"
-          value = local.inbound_queue_host
+          value = "${local.inbound_queue_host}/${var.inbound_queue_name}"
         }
       ]
       secrets = [

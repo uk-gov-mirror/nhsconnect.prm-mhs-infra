@@ -47,6 +47,10 @@ variable "internal_root_domain" {
   description = "Domain name to be used internally to refer to parts of the MHS (subdomains will be created off of this root domain). This domain name should not clash with any domain name on the internet. e.g. internal.somedomainyoucontrol.com"
 }
 
+variable "inbound_queue_name" {
+  default = "inbound"
+}
+
 variable "mhs_outbound_service_minimum_instance_count" {
   type = number
   description = "The minimum number of instances of MHS outbound to run. This will be the number of instances deployed initially."
