@@ -15,7 +15,7 @@ pipelines:
         pipeline: mhs-docker-images
         stage: build
     environment_variables:
-      NHS_ENVIRONMENT: opentest
+      NHS_ENVIRONMENT: dev
     stages:
       - deploy:
           clean_workspace: true

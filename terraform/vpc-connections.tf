@@ -37,11 +37,11 @@ resource "aws_vpc_peering_connection" "supplier_peering_connection" {
 
 # Add a route to the MHS VPC in the supplier VPC route table
 data "aws_ssm_parameter" "private_rtb" {
-    name = "/NHS/${var.deductions_env}-${data.aws_caller_identity.current.account_id}/tf/deductions_private/private_rtb"
+    name = "/NHS/${var.environment_id}-${data.aws_caller_identity.current.account_id}/tf/deductions_private/private_rtb"
 }
 
 data "aws_ssm_parameter" "public_rtb" {
-    name = "/NHS/${var.deductions_env}-${data.aws_caller_identity.current.account_id}/tf/deductions_private/public_rtb"
+    name = "/NHS/${var.environment_id}-${data.aws_caller_identity.current.account_id}/tf/deductions_private/public_rtb"
 }
 
 resource "aws_route" "private_supplier_to_mhs_route" {

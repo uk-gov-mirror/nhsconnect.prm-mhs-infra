@@ -5,7 +5,9 @@ set -Eeo pipefail
 NHS_SERVICE=mhs
 AWS_REGION=eu-west-2
 
-MHS_IMAGE_TAG="${GO_REVISION_INTEGRATION_ADAPTORS:-alpha}"
+if [ -z "${MHS_IMAGE_TAG}" ]; then
+  MHS_IMAGE_TAG="${GO_REVISION_INTEGRATION_ADAPTORS:-alpha}"
+fi
 
 function tf_plan {
   operation=$1
