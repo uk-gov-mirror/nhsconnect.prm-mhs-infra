@@ -83,19 +83,19 @@ locals {
   mhs_outbound_base_secrets = [
     {
       name = "MHS_SECRET_PARTY_KEY"
-      valueFrom = var.party_key_arn
+      valueFrom = local.party_key_arn
     },
     {
       name = "MHS_SECRET_CLIENT_CERT"
-      valueFrom = var.client_cert_arn
+      valueFrom = local.client_cert_arn
     },
     {
       name = "MHS_SECRET_CLIENT_KEY"
-      valueFrom = var.client_key_arn
+      valueFrom = local.client_key_arn
     },
     {
       name = "MHS_SECRET_CA_CERTS"
-      valueFrom = var.ca_certs_arn
+      valueFrom = local.ca_certs_arn
     }
   ]
 }
@@ -194,19 +194,19 @@ resource "aws_ecs_task_definition" "mhs_inbound_task" {
         },
         {
           name = "MHS_SECRET_PARTY_KEY"
-          valueFrom = var.party_key_arn
+          valueFrom = local.party_key_arn
         },
         {
           name = "MHS_SECRET_CLIENT_CERT"
-          valueFrom = var.client_cert_arn
+          valueFrom = local.client_cert_arn
         },
         {
           name = "MHS_SECRET_CLIENT_KEY"
-          valueFrom = var.client_key_arn
+          valueFrom = local.client_key_arn
         },
         {
           name = "MHS_SECRET_CA_CERTS"
-          valueFrom = var.ca_certs_arn
+          valueFrom = local.ca_certs_arn
         }
       ]
       essential = true
@@ -286,15 +286,15 @@ resource "aws_ecs_task_definition" "mhs_route_task" {
       secrets = [
         {
           name = "MHS_SECRET_CLIENT_CERT"
-          valueFrom = var.client_cert_arn
+          valueFrom = local.client_cert_arn
         },
         {
           name = "MHS_SECRET_CLIENT_KEY"
-          valueFrom = var.client_key_arn
+          valueFrom = local.client_key_arn
         },
         {
           name = "MHS_SECRET_CA_CERTS"
-          valueFrom = var.ca_certs_arn
+          valueFrom = local.ca_certs_arn
         }
       ]
       essential = true

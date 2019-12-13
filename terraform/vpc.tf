@@ -11,9 +11,3 @@ resource "aws_vpc" "mhs_vpc" {
     EnvironmentId = var.environment_id
   }
 }
-
-resource "aws_ssm_parameter" "mhs_vpc" {
-  name = "/NHS/deductions-${data.aws_caller_identity.current.account_id}/mhs-${var.environment_id}/vpc_id"
-  type  = "String"
-  value = aws_vpc.mhs_vpc.id
-}

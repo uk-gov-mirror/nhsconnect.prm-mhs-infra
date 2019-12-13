@@ -7,4 +7,14 @@ locals {
   inbound_queue_password_arn=data.aws_secretsmanager_secret.mq-app-password.arn
   #FIXME should use a failover connection string with both endpoints
   inbound_queue_host=replace(data.aws_ssm_parameter.amqp-endpoint-1.value, "amqp+ssl", "amqps")
+
+  party_key_arn=data.aws_secretsmanager_secret.party-key.arn
+  client_cert_arn=data.aws_secretsmanager_secret.client-cert.arn
+  client_key_arn=data.aws_secretsmanager_secret.client-key.arn
+  ca_certs_arn=data.aws_secretsmanager_secret.ca-certs.arn
+
+  # IAM for ECS tasks:
+  task_role_arn = aws_iam_role.mhs.arn
+  task_scaling_role_arn = aws_iam_role.mhs-as.arn
+  execution_role_arn = aws_iam_role.mhs-ecs.arn
 }

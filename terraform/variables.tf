@@ -140,26 +140,6 @@ variable "mhs_sync_async_table_write_capacity" {
   description = "Write capacity of the DynamoDB sync-async table used by the MHS application."
 }
 
-variable "party_key_arn" {
-  type = string
-  description = "ARN of the secrets manager secret of the party key associated with the MHS."
-}
-
-variable "client_cert_arn" {
-  type = string
-  description = "ARN of the secrets manager secret of the endpoint certificate."
-}
-
-variable "client_key_arn" {
-  type = string
-  description = "ARN of the secrets manager secret of the endpoint private key."
-}
-
-variable "ca_certs_arn" {
-  type = string
-  description = "ARN of the secrets manager secret of the endpoint issuing subCA certificate and root CA Certificate (in that order)."
-}
-
 variable "route_ca_certs_arn" {
   type = string
   description = "ARN of the secrets manager secret containing the CA certificates to be used to verify the certificate presented by the Spine Route Lookup service. Required if you are using certificates that are not signed by a legitimate CA."

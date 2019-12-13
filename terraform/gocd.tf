@@ -24,6 +24,10 @@ data "aws_ssm_parameter" "gocd_cidr_block" {
   name = "/NHS/deductions-${data.aws_caller_identity.current.account_id}/gocd-prod/cidr_block"
 }
 
+data "aws_ssm_parameter" "route_table_id" {
+  name = "/NHS/deductions-${data.aws_caller_identity.current.account_id}/gocd-prod/route_table_id"
+}
+
 locals {
   gocd_vpc = data.aws_ssm_parameter.gocd_vpc.value
   gocd_zone_id = data.aws_ssm_parameter.gocd_zone_id.value
@@ -49,10 +53,6 @@ resource "aws_vpc_peering_connection" "gocd_peering_connection" {
     Name = "${var.environment_id}-mhs-gocd-peering-connection"
     EnvironmentId = var.environment_id
   }
-}
-
-data "aws_ssm_parameter" "route_table_id" {
-  name = "/NHS/deductions-${data.aws_caller_identity.current.account_id}/gocd-prod/route_table_id"
 }
 
 # Add a route to the MHS VPC in the gocd VPC route table
