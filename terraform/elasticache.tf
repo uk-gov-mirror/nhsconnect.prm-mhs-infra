@@ -28,5 +28,5 @@ resource "aws_elasticache_replication_group" "elasticache_replication_group" {
 resource "aws_elasticache_subnet_group" "elasticache_subnet_group" {
   name = "${var.environment_id}-elasticache-subnet-group"
   description = "Subnet group for the ElastiCache cluster used in environment: ${var.environment_id}"
-  subnet_ids = aws_subnet.mhs_subnet.*.id
+  subnet_ids = local.subnet_ids
 }

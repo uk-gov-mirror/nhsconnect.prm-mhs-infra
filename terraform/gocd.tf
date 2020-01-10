@@ -6,8 +6,8 @@ module "gocd" {
     region = "${var.region}"
     az = data.aws_availability_zones.all.names[0]
     vpc_id = local.mhs_vpc_id
-    subnet_id = module.opentest.subnet_id
-    agent_resources = "mhs-opentest"
+    subnet_id = local.public_subnet_id
+    agent_resources = "${var.environment_id},mhs"
     allocate_public_ip = true
     agent_count = 1
 }

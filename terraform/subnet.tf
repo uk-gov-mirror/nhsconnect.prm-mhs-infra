@@ -1,7 +1,11 @@
+locals {
+  subnet_ids = var.use_existing_vpc == "" ? aws_subnet.mhs_subnet.*.id : data.aws_subnet.mhs_subnet.*.id
+  subnet_cidrs = var.use_existing_vpc == "" ? aws_subnet.mhs_subnet.*.cidr_block : data.aws_subnet.mhs_subnet.*.cidr_block
+}
 
 # Create a private subnet in each availability zone in the region.
 resource "aws_subnet" "mhs_subnet" {
-  count = length(data.aws_availability_zones.all.names)
+  count = var.use_existing_vpc == "" ? length(data.aws_availability_zones.all.names) : 0
 
   vpc_id = local.mhs_vpc_id
   availability_zone = data.aws_availability_zones.all.names[count.index]
@@ -18,4 +22,10 @@ resource "aws_subnet" "mhs_subnet" {
     Name = "${var.environment_id}-mhs-subnet-${data.aws_availability_zones.all.names[count.index]}"
     EnvironmentId = var.environment_id
   }
+}
+
+data "aws_subnet" "mhs_subnet" {
+  count = var.use_existing_vpc == "" ? 0 : length(data.aws_availability_zones.all.names)
+  vpc_id = local.mhs_vpc_id
+  cidr_block = cidrsubnet(local.mhs_vpc_cidr_block, var.cidr_newbits, count.index)
 }

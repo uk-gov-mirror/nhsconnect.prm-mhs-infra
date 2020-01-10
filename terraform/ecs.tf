@@ -348,7 +348,7 @@ resource "aws_ecs_service" "mhs_outbound_service" {
     security_groups = [
       aws_security_group.mhs_outbound_security_group.id
     ]
-    subnets = aws_subnet.mhs_subnet.*.id
+    subnets = local.subnet_ids
   }
 
   load_balancer {
@@ -416,7 +416,7 @@ resource "aws_ecs_service" "mhs_inbound_service" {
     security_groups = [
       aws_security_group.mhs_inbound_security_group.id
     ]
-    subnets = aws_subnet.mhs_subnet.*.id
+    subnets = local.subnet_ids
   }
 
   load_balancer {
@@ -485,7 +485,7 @@ resource "aws_ecs_service" "mhs_route_service" {
     security_groups = [
       aws_security_group.mhs_route_security_group.id
     ]
-    subnets = aws_subnet.mhs_subnet.*.id
+    subnets = local.subnet_ids
   }
 
   load_balancer {

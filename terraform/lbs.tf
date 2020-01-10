@@ -10,7 +10,7 @@
 resource "aws_lb" "outbound_alb" {
   internal = true
   load_balancer_type = "application"
-  subnets = aws_subnet.mhs_subnet.*.id
+  subnets = local.subnet_ids
   security_groups = [
     aws_security_group.alb_outbound_security_group.id
   ]
@@ -80,7 +80,7 @@ resource "aws_lb_listener" "outbound_alb_listener" {
 resource "aws_lb" "route_alb" {
   internal = true
   load_balancer_type = "application"
-  subnets = aws_subnet.mhs_subnet.*.id
+  subnets = local.subnet_ids
   security_groups = [
     aws_security_group.alb_route_security_group.id
   ]
@@ -153,7 +153,7 @@ resource "aws_lb_listener" "route_alb_listener" {
 resource "aws_lb" "inbound_nlb" {
   internal = true
   load_balancer_type = "network"
-  subnets = aws_subnet.mhs_subnet.*.id
+  subnets = local.subnet_ids
   enable_cross_zone_load_balancing = true
 
   access_logs {

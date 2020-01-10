@@ -33,7 +33,7 @@ resource "aws_vpc_endpoint" "ecr_endpoint" {
   ]
 
   # An endpoint network interface is created in all of the subnets we have created.
-  subnet_ids = aws_subnet.mhs_subnet.*.id
+  subnet_ids = local.subnet_ids
 
   tags = {
     Name = "${var.environment_id}-ecr-endpoint"
@@ -67,7 +67,7 @@ resource "aws_vpc_endpoint" "cloudwatch_endpoint" {
   ]
 
   # An endpoint network interface is created in all of the subnets we have created.
-  subnet_ids = aws_subnet.mhs_subnet.*.id
+  subnet_ids = local.subnet_ids
 
   tags = {
     Name = "${var.environment_id}-cloudwatch-endpoint"

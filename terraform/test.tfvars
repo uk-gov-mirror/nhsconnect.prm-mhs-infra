@@ -21,7 +21,7 @@ mhs_sync_async_table_read_capacity=5
 mhs_sync_async_table_write_capacity=5
 
 use_existing_vpc="vpc-0a7a8d6e6ffcd4854" # prm-dev-dxnetwork: 10.239.68.128/25
-cidr_newbits=3
+cidr_newbits=2
 use_opentest="false"
 #TODO: values for PTL
 # Issued with a private CA

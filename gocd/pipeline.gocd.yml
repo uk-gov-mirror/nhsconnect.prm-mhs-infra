@@ -41,7 +41,8 @@ pipelines:
           jobs:
             e2e:
               resources:
-                - mhs-opentest
+                - dev
+                - mhs
               tasks:
                 - exec:
                     command: /bin/bash
