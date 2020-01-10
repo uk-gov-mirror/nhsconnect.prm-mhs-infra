@@ -10,7 +10,7 @@ mhs_route_service_maximum_instance_count = 2
 mhs_route_service_minimum_instance_count = 1
 mhs_log_level                       = "INFO"
 elasticache_node_type               = "cache.t3.micro"
-supplier_vpc_id                     = "vpc-0918f832cc6eb6370" # That should be deductions-private.
+supplier_vpc_id                     = "vpc-0918f832cc6eb6370" # That should be deductions-private. TODO: from SSM
 
 # From https://gpitbjss.atlassian.net/wiki/spaces/RTDel/pages/1606615966/Deploying+the+Exemplar+Architecture
 mhs_resynchroniser_max_retries="20"
@@ -24,6 +24,7 @@ mhs_sync_async_table_write_capacity=5
 outbound_alb_certificate_arn="arn:aws:acm:eu-west-2:327778747031:certificate/67279db0-17f9-4517-8572-eb739ae6808b"
 route_alb_certificate_arn="arn:aws:acm:eu-west-2:327778747031:certificate/3630471e-0ca2-4aec-a7f1-ef78258c8283"
 
+use_opentest="true"
 mhs_forward_reliable_endpoint_url  = "https://192.168.128.11/reliablemessaging/forwardreliable" # specific to opentest
 # have a look at curl to PDS, SDS in dev-network from a bastion
 # The SDS URL the Spine Route Lookup service should communicate with.

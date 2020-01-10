@@ -8,6 +8,8 @@ variable "my_ip" {
   default = "127.0.0.1"
 }
 
+variable "use_opentest" {}
+
 variable "opentest_cidr" {
   default = "192.168.128.0/24"
 }
