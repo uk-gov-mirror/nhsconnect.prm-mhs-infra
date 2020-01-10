@@ -10,6 +10,16 @@ variable "my_ip" {
 
 variable "use_opentest" {}
 
+variable "use_existing_vpc" {
+  default = ""
+  description = "Rather than creating a new VPC, we re-use existing one. This is required until we get proper setup with a transit gateway."
+}
+
+variable "cidr_newbits" {
+  default = 8
+  description = "Defines the size of the subnets"
+}
+
 variable "opentest_cidr" {
   default = "192.168.128.0/24"
 }

@@ -15,7 +15,7 @@
 resource "aws_security_group" "mhs_outbound_security_group" {
   name = "MHS Outbound Security Group"
   description = "The security group used to control traffic for the MHS Outbound component."
-  vpc_id = aws_vpc.mhs_vpc.id
+  vpc_id = local.mhs_vpc_id
 
   tags = {
     Name = "${var.environment_id}-mhs-outbound-sg"
@@ -89,7 +89,7 @@ resource "aws_security_group_rule" "mhs_outbound_security_group_cloudwatch_egres
 resource "aws_security_group" "mhs_route_security_group" {
   name = "MHS Route Security Group"
   description = "The security group used to control traffic for the MHS Routing component."
-  vpc_id = aws_vpc.mhs_vpc.id
+  vpc_id = local.mhs_vpc_id
 
   tags = {
     Name = "${var.environment_id}-mhs-route-sg"
@@ -163,7 +163,7 @@ resource "aws_security_group_rule" "mhs_route_security_group_cloudwatch_egress_r
 resource "aws_security_group" "mhs_inbound_security_group" {
   name = "MHS Inbound Security Group"
   description = "The security group used to control traffic for the MHS Inbound component."
-  vpc_id = aws_vpc.mhs_vpc.id
+  vpc_id = local.mhs_vpc_id
 
   tags = {
     Name = "${var.environment_id}-mhs-inbound-sg"
@@ -251,7 +251,7 @@ resource "aws_security_group_rule" "mhs_inbound_security_group_cloudwatch_egress
 resource "aws_security_group" "ecr_security_group" {
   name = "ECR Endpoint Security Group"
   description = "The security group used to control traffic for the ECR VPC endpoint."
-  vpc_id = aws_vpc.mhs_vpc.id
+  vpc_id = local.mhs_vpc_id
 
   ingress {
     from_port = 443
@@ -285,7 +285,7 @@ resource "aws_security_group" "ecr_security_group" {
 resource "aws_security_group" "cloudwatch_security_group" {
   name = "Cloudwatch Endpoint Security Group"
   description = "The security group used to control traffic for the Cloudwatch VPC endpoint."
-  vpc_id = aws_vpc.mhs_vpc.id
+  vpc_id = local.mhs_vpc_id
 
   ingress {
     from_port = 443
@@ -314,7 +314,7 @@ resource "aws_security_group" "cloudwatch_security_group" {
 resource "aws_security_group" "sds_cache_security_group" {
   name = "SDS Cache Security Group"
   description = "The security group used to control traffic for the SDS cache endpoint."
-  vpc_id = aws_vpc.mhs_vpc.id
+  vpc_id = local.mhs_vpc_id
 
   ingress {
     from_port = 6379
@@ -345,7 +345,7 @@ resource "aws_security_group" "sds_cache_security_group" {
 resource "aws_security_group" "alb_outbound_security_group" {
   name = "Outbound ALB Security Group"
   description = "The security group used to control traffic for the outbound MHS Application Load Balancer."
-  vpc_id = aws_vpc.mhs_vpc.id
+  vpc_id = local.mhs_vpc_id
 
   # Allow inbound traffic from the supplier VPC. We don't make any
   # assumptions here about the internal structure of the supplier VPC,
@@ -395,7 +395,7 @@ resource "aws_security_group" "alb_outbound_security_group" {
 resource "aws_security_group" "alb_route_security_group" {
   name = "Route ALB Security Group"
   description = "The security group used to control traffic for the MHS routing component Application Load Balancer."
-  vpc_id = aws_vpc.mhs_vpc.id
+  vpc_id = local.mhs_vpc_id
 
   # Allow inbound traffic from MHS outbound
   ingress {

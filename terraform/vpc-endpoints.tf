@@ -9,10 +9,10 @@
 
 # DynamoDB VPC endpoint
 resource "aws_vpc_endpoint" "dynamodb_endpoint" {
-  vpc_id = aws_vpc.mhs_vpc.id
+  vpc_id = local.mhs_vpc_id
   service_name = "com.amazonaws.${var.region}.dynamodb"
   route_table_ids = [
-    aws_vpc.mhs_vpc.main_route_table_id
+    local.mhs_vpc_route_table_id
   ]
 
   tags = {
@@ -23,7 +23,7 @@ resource "aws_vpc_endpoint" "dynamodb_endpoint" {
 
 # ECR VPC endpoint
 resource "aws_vpc_endpoint" "ecr_endpoint" {
-  vpc_id = aws_vpc.mhs_vpc.id
+  vpc_id = local.mhs_vpc_id
   service_name = "com.amazonaws.${var.region}.ecr.dkr"
   vpc_endpoint_type = "Interface"
   private_dns_enabled = true
@@ -43,10 +43,10 @@ resource "aws_vpc_endpoint" "ecr_endpoint" {
 
 # S3 VPC endpoint
 resource "aws_vpc_endpoint" "s3_endpoint" {
-  vpc_id = aws_vpc.mhs_vpc.id
+  vpc_id = local.mhs_vpc_id
   service_name = "com.amazonaws.${var.region}.s3"
   route_table_ids = [
-    aws_vpc.mhs_vpc.main_route_table_id
+    local.mhs_vpc_route_table_id
   ]
 
   tags = {
@@ -57,7 +57,7 @@ resource "aws_vpc_endpoint" "s3_endpoint" {
 
 # Cloudwatch VPC endpoint
 resource "aws_vpc_endpoint" "cloudwatch_endpoint" {
-  vpc_id = aws_vpc.mhs_vpc.id
+  vpc_id = local.mhs_vpc_id
   service_name = "com.amazonaws.${var.region}.logs"
   vpc_endpoint_type = "Interface"
   private_dns_enabled = true

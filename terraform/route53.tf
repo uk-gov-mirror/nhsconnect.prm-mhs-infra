@@ -17,7 +17,7 @@ resource "aws_route53_zone" "mhs_hosted_zone" {
     # may need to be deleted in order for this to be picked up. But care must be
     # taken when doing this, as this can conflict with other
     # aws_route53_zone_association blocks
-    vpc_id = aws_vpc.mhs_vpc.id
+    vpc_id = local.mhs_vpc_id
   }
 
   tags = {

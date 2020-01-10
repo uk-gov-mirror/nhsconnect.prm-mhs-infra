@@ -18,7 +18,7 @@
 # VPC peering connection
 resource "aws_vpc_peering_connection" "supplier_peering_connection" {
   peer_vpc_id = var.supplier_vpc_id
-  vpc_id = aws_vpc.mhs_vpc.id
+  vpc_id = local.mhs_vpc_id
   auto_accept = true
 
   accepter {
@@ -46,13 +46,13 @@ data "aws_ssm_parameter" "public_rtb" {
 
 resource "aws_route" "private_supplier_to_mhs_route" {
   route_table_id = data.aws_ssm_parameter.private_rtb.value
-  destination_cidr_block = aws_vpc.mhs_vpc.cidr_block
+  destination_cidr_block = local.mhs_vpc_cidr_block
   vpc_peering_connection_id = aws_vpc_peering_connection.supplier_peering_connection.id
 }
 
 # Add a route to the supplier VPC in the MHS VPC private subnet route table
 resource "aws_route" "mhs_to_supplier_route" {
-  route_table_id = aws_vpc.mhs_vpc.main_route_table_id
+  route_table_id = local.mhs_vpc_route_table_id
   destination_cidr_block = data.aws_vpc.supplier_vpc.cidr_block
   vpc_peering_connection_id = aws_vpc_peering_connection.supplier_peering_connection.id
 }

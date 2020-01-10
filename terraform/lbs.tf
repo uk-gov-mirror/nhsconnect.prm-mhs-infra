@@ -39,7 +39,7 @@ resource "aws_lb_target_group" "outbound_alb_target_group" {
   port = 80
   protocol = "HTTP"
   target_type = "ip"
-  vpc_id = aws_vpc.mhs_vpc.id
+  vpc_id = local.mhs_vpc_id
 
   health_check {
     path = "/healthcheck"
@@ -109,7 +109,7 @@ resource "aws_lb_target_group" "route_alb_target_group" {
   port = 80
   protocol = "HTTP"
   target_type = "ip"
-  vpc_id = aws_vpc.mhs_vpc.id
+  vpc_id = local.mhs_vpc_id
 
   health_check {
     path = "/healthcheck"
@@ -180,7 +180,7 @@ resource "aws_lb_target_group" "inbound_nlb_target_group" {
   port = 443
   protocol = "TCP"
   target_type = "ip"
-  vpc_id = aws_vpc.mhs_vpc.id
+  vpc_id = local.mhs_vpc_id
 
   health_check {
     protocol = "HTTP"
