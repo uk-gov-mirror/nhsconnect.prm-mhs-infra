@@ -12,11 +12,11 @@ data "aws_vpc" "supplier_vpc" {
   id = var.supplier_vpc_id
 }
 
-data "aws_secretsmanager_secret" "mq-app-username" {
+data "aws_ssm_parameter" "mq-app-username" {
   name = "/nhs/${var.environment_id}/mq/app-username"
 }
 
-data "aws_secretsmanager_secret" "mq-app-password" {
+data "aws_ssm_parameter" "mq-app-password" {
   name = "/nhs/${var.environment_id}/mq/app-password"
 }
 

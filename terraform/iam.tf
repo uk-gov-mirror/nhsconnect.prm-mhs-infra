@@ -74,24 +74,24 @@ resource "aws_iam_role_policy_attachment" "ecs-task-exec-attach" {
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
 }
 
-data "aws_iam_policy_document" "read-secrets-manager" {
+data "aws_iam_policy_document" "read-secrets" {
   statement {
     actions = [
-      "secretsmanager:GetSecretValue"
+      "ssm:GetParameter",
     ]
 
     resources = [
-      "arn:aws:secretsmanager:${var.region}:${data.aws_caller_identity.current.account_id}:secret:*",
+      "arn:aws:ssm:${var.region}:${data.aws_caller_identity.current.account_id}:parameter/*",
     ]
   }
 }
 
-resource "aws_iam_policy" "read-secrets-manager" {
-  name   = "read-secrets-manager"
-  policy = "${data.aws_iam_policy_document.read-secrets-manager.json}"
+resource "aws_iam_policy" "read-secrets" {
+  name   = "read-secrets"
+  policy = "${data.aws_iam_policy_document.read-secrets.json}"
 }
 
 resource "aws_iam_role_policy_attachment" "ecs-read-secrets-attach" {
   role       = "${aws_iam_role.mhs-ecs.name}"
-  policy_arn = aws_iam_policy.read-secrets-manager.arn
+  policy_arn = aws_iam_policy.read-secrets.arn
 }
