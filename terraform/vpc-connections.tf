@@ -80,6 +80,6 @@ resource "aws_security_group_rule" "mhs_inbound_security_group_amazon_mq_egress_
 # Add a route to the supplier VPC in the MHS VPC public subnet route table
 resource "aws_route" "mhs_public_to_supplier_route" {
   route_table_id = local.public_subnet_route_table
-  destination_cidr_block = "10.20.0.0/16"
+  destination_cidr_block = data.aws_vpc.supplier_vpc.cidr_block
   vpc_peering_connection_id = aws_vpc_peering_connection.supplier_peering_connection.id
 }
