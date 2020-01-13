@@ -32,7 +32,6 @@ locals {
   gocd_vpc = data.aws_ssm_parameter.gocd_vpc.value
   gocd_zone_id = data.aws_ssm_parameter.gocd_zone_id.value
   gocd_cidr_block = data.aws_ssm_parameter.gocd_cidr_block.value
-  public_subnet_route_table = module.opentest.public_route_table_id
 }
 
 # VPC peering connection with GoCD server
