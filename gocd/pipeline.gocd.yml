@@ -50,3 +50,57 @@ pipelines:
                     arguments:
                       - -c
                       - ./tasks e2e_tests
+
+  "prm-mhs-infra-ptl-integration":
+    group: mhs
+    label_template: "${git[:8]}"
+    materials:
+      git:
+        type: configrepo
+        destination: prm-mhs-infra
+      integration_adaptors:
+        git: https://github.com/tomzo/integration-adaptors.git
+        branch: deductions
+        destination: integration-adaptors
+      docker:
+        pipeline: mhs-docker-images
+        stage: build
+      dev_env:
+        pipeline: prm-mhs-infra-opentest
+        stage: deploy #FIXME: actually should depend on tests, but opentest tests are failing now
+    environment_variables:
+      NHS_ENVIRONMENT: test
+    stages:
+      - deploy:
+          clean_workspace: true
+          jobs:
+            deploy:
+              resources:
+                - docker
+              tasks:
+                - exec:
+                    command: /bin/bash
+                    working_directory: prm-mhs-infra
+                    arguments:
+                      - -c
+                      - ./tasks tf_plan create
+                - exec:
+                    command: /bin/bash
+                    working_directory: prm-mhs-infra
+                    arguments:
+                      - -c
+                      - ./tasks tf_apply
+      - test:
+          clean_workspace: true
+          jobs:
+            e2e:
+              resources:
+                - test
+                - mhs
+              tasks:
+                - exec:
+                    command: /bin/bash
+                    working_directory: integration-adaptors
+                    arguments:
+                      - -c
+                      - ./tasks e2e_tests
