@@ -13,7 +13,7 @@ data "aws_iam_policy_document" "ecs-assume-role-policy" {
 }
 
 resource "aws_iam_role" "mhs" {
-  name               = "mhs"
+  name               = "mhs-${var.environment_id}"
   assume_role_policy = "${data.aws_iam_policy_document.ecs-assume-role-policy.json}"
 }
 
@@ -31,7 +31,7 @@ data "aws_iam_policy_document" "dynamodb-table-access" {
 }
 
 resource "aws_iam_policy" "dynamodb-table-access" {
-  name   = "dynamodb-table-access"
+  name   = "mhs-${var.environment_id}-dynamodb-table-access"
   policy = "${data.aws_iam_policy_document.dynamodb-table-access.json}"
 }
 
@@ -41,7 +41,7 @@ resource "aws_iam_role_policy_attachment" "mhs_dynamo_attach" {
 }
 
 resource "aws_iam_role" "mhs-as" {
-  name               = "mhs-as"
+  name               = "mhs-as-${var.environment_id}"
   assume_role_policy = "${data.aws_iam_policy_document.ecs-assume-role-policy.json}"
 }
 
@@ -60,7 +60,7 @@ data "aws_iam_policy_document" "mhs-ecs-assume-role-policy" {
 }
 
 resource "aws_iam_role" "mhs-ecs" {
-  name               = "mhsEcsTaskExecutionRole"
+  name               = "mhs-${var.environment_id}-EcsTaskExecutionRole"
   assume_role_policy = "${data.aws_iam_policy_document.mhs-ecs-assume-role-policy.json}"
 }
 
@@ -87,7 +87,7 @@ data "aws_iam_policy_document" "read-secrets" {
 }
 
 resource "aws_iam_policy" "read-secrets" {
-  name   = "read-secrets"
+  name   = "mhs-${var.environment_id}-read-secrets"
   policy = "${data.aws_iam_policy_document.read-secrets.json}"
 }
 
