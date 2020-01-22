@@ -2,3 +2,5 @@
 /terraform/nhs_deployment.tfplan
 /terraform/.terraform/
 /terraform/tf-out.json
+/terraform-patch/terraform.tfstate*
+/terraform-patch/.terraform/

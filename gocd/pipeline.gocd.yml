@@ -90,6 +90,12 @@ pipelines:
                     arguments:
                       - -c
                       - ./tasks tf_apply
+                - exec:
+                    command: /bin/bash
+                    working_directory: prm-mhs-infra
+                    arguments:
+                      - -c
+                      - ./tasks nlb_ips
       - test:
           clean_workspace: true
           jobs:

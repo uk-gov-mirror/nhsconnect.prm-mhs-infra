@@ -96,6 +96,16 @@ case "${command}" in
       ./tasks ssh_key
       dojo "./tasks _tf_apply"
       ;;
+  _nlb_ips)
+      cd terraform-patch
+      terraform init
+      terraform apply -auto-approve -var environment=$NHS_ENVIRONMENT
+      ;;
+  nlb_ips)
+      dojo "./tasks _nlb_ips"
+      echo "Above IPs need to be registered with HSCN DNS'es. The process is manual, go to:"
+      echo "https://digital.nhs.uk/forms/dns-registration"
+      ;;
   _generate_certs)
       check_env
       rm -rf support
