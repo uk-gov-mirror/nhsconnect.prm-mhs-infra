@@ -8,6 +8,7 @@
 
 # Application load balancer for MHS outbound
 resource "aws_lb" "outbound_alb" {
+  name = "${var.environment_id}-mhs-outbound-alb"
   internal = true
   load_balancer_type = "application"
   subnets = local.subnet_ids
@@ -78,6 +79,7 @@ resource "aws_lb_listener" "outbound_alb_listener" {
 
 # Application load balancer for MHS route service
 resource "aws_lb" "route_alb" {
+  name = "${var.environment_id}-mhs-route-alb"
   internal = true
   load_balancer_type = "application"
   subnets = local.subnet_ids
@@ -151,6 +153,7 @@ resource "aws_lb_listener" "route_alb_listener" {
 # have to use a network load balancer here and not an application load balancer,
 # to passthrough the SSL traffic.
 resource "aws_lb" "inbound_nlb" {
+  name = "${var.environment_id}-mhs-inbound-nlb"
   internal = true
   load_balancer_type = "network"
   subnets = local.subnet_ids
