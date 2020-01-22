@@ -1,7 +1,7 @@
 region                              = "eu-west-2"
 environment_id                      = "test" # just a name identifier
 mhs_vpc_cidr_block                  = "10.34.0.0/16" # Must not conflict with other networks
-internal_root_domain                = "internal-mhs.nhs.net" # DNS zone inside MHS VPC
+internal_root_domain                = "mhs.patient-deductions.nhs.uk" # DNS zone inside MHS VPC
 mhs_inbound_service_maximum_instance_count = 2
 mhs_inbound_service_minimum_instance_count = 1
 mhs_outbound_service_maximum_instance_count = 2
