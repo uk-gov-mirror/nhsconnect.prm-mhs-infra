@@ -1,5 +1,7 @@
 region                              = "eu-west-2"
 environment_id                      = "dev" # just a name identifier
+recipient_ods_code                  = "opentest" # Not used in opentest
+nlb_deletion_protection             = false
 mhs_vpc_cidr_block                  = "10.33.0.0/16" # Must not conflict with other networks
 internal_root_domain                = "mhs.patient-deductions.nhs.uk" # DNS zone inside MHS VPC
 mhs_inbound_service_maximum_instance_count = 2

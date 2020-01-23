@@ -8,10 +8,14 @@
 # MHS load balancers.
 ########################################################
 
+locals {
+  domain_suffix = "${var.environment_id}-${var.recipient_ods_code}"
+}
+
 # The Route53 hosted zone under which we have subdomains pointing to different
 # bits of the MHS
 resource "aws_route53_zone" "mhs_hosted_zone" {
-  name = "${var.environment_id}.${var.internal_root_domain}"
+  name = var.internal_root_domain
   vpc {
     # Note that if a change is made to vpc_id here, then the lifecycle block below
     # may need to be deleted in order for this to be picked up. But care must be
@@ -36,7 +40,7 @@ resource "aws_route53_zone" "mhs_hosted_zone" {
 # Route53 DNS record that is a domain name pointing to the MHS outbound load balancer
 resource "aws_route53_record" "mhs_outbound_load_balancer_record" {
   zone_id = aws_route53_zone.mhs_hosted_zone.zone_id
-  name = "mhs-outbound.${aws_route53_zone.mhs_hosted_zone.name}"
+  name = "mhs-outbound-${var.environment_id}.${aws_route53_zone.mhs_hosted_zone.name}"
   type = "A"
 
   alias {
@@ -55,7 +59,7 @@ output "outbound_lb_domain_name" {
 # Route53 DNS record that is a domain name pointing to the MHS route service load balancer
 resource "aws_route53_record" "mhs_route_load_balancer_record" {
   zone_id = aws_route53_zone.mhs_hosted_zone.zone_id
-  name = "mhs-route.${aws_route53_zone.mhs_hosted_zone.name}"
+  name = "mhs-route-${var.environment_id}.${aws_route53_zone.mhs_hosted_zone.name}"
   type = "A"
 
   alias {
@@ -74,7 +78,7 @@ output "route_lb_domain_name" {
 # Route53 DNS record that is a domain name pointing to the MHS inbound load balancer
 resource "aws_route53_record" "mhs_inbound_load_balancer_record" {
   zone_id = aws_route53_zone.mhs_hosted_zone.zone_id
-  name = "mhs-inbound.${aws_route53_zone.mhs_hosted_zone.name}"
+  name = "mhs-inbound-${local.domain_suffix}.${aws_route53_zone.mhs_hosted_zone.name}"
   type = "A"
 
   alias {

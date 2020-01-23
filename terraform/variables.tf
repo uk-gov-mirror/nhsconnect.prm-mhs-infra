@@ -8,6 +8,12 @@ variable "my_ip" {
   default = "127.0.0.1"
 }
 
+variable "recipient_ods_code" {
+  description = "ODS code that was used for the MHS (CMA endpoint) registration"
+}
+
+variable "nlb_deletion_protection" {}
+
 variable "use_opentest" {}
 
 variable "use_existing_vpc" {

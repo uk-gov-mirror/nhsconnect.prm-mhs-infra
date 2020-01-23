@@ -37,6 +37,7 @@ resource "aws_lb" "outbound_alb" {
 # Target group for the application load balancer for MHS outbound
 # The MHS outbound ECS service registers it's tasks here.
 resource "aws_lb_target_group" "outbound_alb_target_group" {
+  name = "${var.environment_id}-mhs-outbound"
   port = 80
   protocol = "HTTP"
   target_type = "ip"
@@ -108,6 +109,7 @@ resource "aws_lb" "route_alb" {
 # Target group for the application load balancer for MHS route service
 # The MHS route ECS service registers it's tasks here.
 resource "aws_lb_target_group" "route_alb_target_group" {
+  name = "${var.environment_id}-mhs-route"
   port = 80
   protocol = "HTTP"
   target_type = "ip"
@@ -158,6 +160,10 @@ resource "aws_lb" "inbound_nlb" {
   load_balancer_type = "network"
   subnets = local.subnet_ids
   enable_cross_zone_load_balancing = true
+  # We turn-on deletion protection to force you to read this note before deletion:
+  # Whenever the NLB is re-deployed in HSCN network, it's ipaddresses will change and
+  # you need to submit a DNS update form manually. See ./tasks nlb_ips
+  enable_deletion_protection = var.nlb_deletion_protection
 
   access_logs {
     bucket = aws_s3_bucket.mhs_access_logs_bucket.bucket
@@ -180,6 +186,7 @@ resource "aws_lb" "inbound_nlb" {
 # Target group for the network load balancer for MHS inbound
 # The MHS inbound ECS service registers it's tasks here.
 resource "aws_lb_target_group" "inbound_nlb_target_group" {
+  name = "${var.environment_id}-mhs-inbound"
   port = 443
   protocol = "TCP"
   target_type = "ip"
