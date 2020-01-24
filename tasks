@@ -151,10 +151,11 @@ case "${command}" in
       ;;
   _nlb_ips)
       cd terraform-patch
-      terraform init
+      terraform init -backend-config key=${NHS_SERVICE}-${NHS_ENVIRONMENT}/terraform-patch.tfstate
       terraform apply -auto-approve -var environment=$NHS_ENVIRONMENT
       ;;
   nlb_ips)
+      check_env
       dojo "./tasks _nlb_ips"
       ;;
   _generate_certs)
