@@ -93,3 +93,9 @@ output "inbound_lb_domain_name" {
   value = aws_route53_record.mhs_inbound_load_balancer_record.name
   description = "The DNS name of the Route53 record pointing to the MHS inbound service's load balancer."
 }
+
+resource "aws_ssm_parameter" "route_dns_name" {
+  name = "/NHS/deductions-${data.aws_caller_identity.current.account_id}/mhs-${var.environment_id}/route_dns_name"
+  value = aws_route53_record.mhs_inbound_load_balancer_record.name
+  type = "String"
+}
