@@ -68,12 +68,6 @@ resource "aws_route" "mhs_to_gocd_route" {
   vpc_peering_connection_id = aws_vpc_peering_connection.gocd_peering_connection.id
 }
 
-# Allow DNS resolution of the domain names defined in mhs in the gocd VPC (not really necessary)
-resource "aws_route53_zone_association" "gocd_hosted_zone_mhs_vpc_association" {
-  zone_id = aws_route53_zone.mhs_hosted_zone.zone_id
-  vpc_id = local.gocd_vpc
-}
-
 # Allow DNS resolution of the domain names defined in gocd VPC in mhs vpc
 resource "aws_route53_zone_association" "mhs_hosted_zone_gocd_vpc_association" {
   zone_id = local.gocd_zone_id
