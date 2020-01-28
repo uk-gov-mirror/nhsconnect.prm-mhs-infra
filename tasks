@@ -163,8 +163,8 @@ case "${command}" in
       rm -rf support
       git clone https://github.com/nhsconnect/prm-deductions-support-infra.git support
       cd support
-      ./utils/generate-certs.sh -f mhs-outbound.$NHS_ENVIRONMENT -d "mhs-outbound.$NHS_ENVIRONMENT.internal-mhs.nhs.net"
-      ./utils/generate-certs.sh -f mhs-route.$NHS_ENVIRONMENT -d "mhs-route.$NHS_ENVIRONMENT.internal-mhs.nhs.net"
+      ./utils/generate-certs.sh -f mhs-outbound.$NHS_ENVIRONMENT -d "mhs-outbound-$NHS_ENVIRONMENT.mhs.patient-deductions.nhs.uk"
+      ./utils/generate-certs.sh -f mhs-route.$NHS_ENVIRONMENT -d "mhs-route-$NHS_ENVIRONMENT.mhs.patient-deductions.nhs.uk"
       ;;
   generate_certs)
       dojo "./tasks _generate_certs"

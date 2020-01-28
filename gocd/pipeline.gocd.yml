@@ -1,4 +1,31 @@
 format_version: 4
+common:
+  deploy_tasks: &deploy_tasks
+    - exec:
+        command: /bin/bash
+        working_directory: prm-mhs-infra
+        arguments:
+          - -c
+          - ./tasks generate_certs
+    - exec:
+        command: /bin/bash
+        working_directory: prm-mhs-infra
+        arguments:
+          - -c
+          - ./tasks upload_certs
+    - exec:
+        command: /bin/bash
+        working_directory: prm-mhs-infra
+        arguments:
+          - -c
+          - ./tasks tf_plan create
+    - exec:
+        command: /bin/bash
+        working_directory: prm-mhs-infra
+        arguments:
+          - -c
+          - ./tasks tf_apply
+
 pipelines:
   "prm-mhs-infra-opentest":
     group: mhs
@@ -23,19 +50,7 @@ pipelines:
             deploy:
               resources:
                 - docker
-              tasks:
-                - exec:
-                    command: /bin/bash
-                    working_directory: prm-mhs-infra
-                    arguments:
-                      - -c
-                      - ./tasks tf_plan create
-                - exec:
-                    command: /bin/bash
-                    working_directory: prm-mhs-infra
-                    arguments:
-                      - -c
-                      - ./tasks tf_apply
+              tasks: *deploy_tasks
       - test:
           clean_workspace: true
           jobs:
@@ -78,18 +93,7 @@ pipelines:
               resources:
                 - docker
               tasks:
-                - exec:
-                    command: /bin/bash
-                    working_directory: prm-mhs-infra
-                    arguments:
-                      - -c
-                      - ./tasks tf_plan create
-                - exec:
-                    command: /bin/bash
-                    working_directory: prm-mhs-infra
-                    arguments:
-                      - -c
-                      - ./tasks tf_apply
+                - *deploy_tasks
                 - exec:
                     command: /bin/bash
                     working_directory: prm-mhs-infra
