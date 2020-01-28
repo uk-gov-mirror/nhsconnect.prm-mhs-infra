@@ -14,6 +14,7 @@ locals {
   #FIXME should use a failover connection string with both endpoints
   inbound_queue_host=replace(data.aws_ssm_parameter.amqp-endpoint-1.value, "amqp+ssl", "amqps")
 
+  # MHS secrets to connect with spine
   party_key_arn=data.aws_ssm_parameter.party-key.arn
   client_cert_arn=data.aws_ssm_parameter.client-cert.arn
   client_key_arn=data.aws_ssm_parameter.client-key.arn

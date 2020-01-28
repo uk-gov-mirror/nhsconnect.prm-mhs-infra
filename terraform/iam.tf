@@ -14,7 +14,7 @@ data "aws_iam_policy_document" "ecs-assume-role-policy" {
 
 resource "aws_iam_role" "mhs" {
   name               = "mhs-${var.environment_id}"
-  assume_role_policy = "${data.aws_iam_policy_document.ecs-assume-role-policy.json}"
+  assume_role_policy = data.aws_iam_policy_document.ecs-assume-role-policy.json
 }
 
 data "aws_iam_policy_document" "dynamodb-table-access" {
@@ -32,17 +32,17 @@ data "aws_iam_policy_document" "dynamodb-table-access" {
 
 resource "aws_iam_policy" "dynamodb-table-access" {
   name   = "mhs-${var.environment_id}-dynamodb-table-access"
-  policy = "${data.aws_iam_policy_document.dynamodb-table-access.json}"
+  policy = data.aws_iam_policy_document.dynamodb-table-access.json
 }
 
 resource "aws_iam_role_policy_attachment" "mhs_dynamo_attach" {
-  role       = "${aws_iam_role.mhs.name}"
+  role       = aws_iam_role.mhs.name
   policy_arn = aws_iam_policy.dynamodb-table-access.arn
 }
 
 resource "aws_iam_role" "mhs-as" {
   name               = "mhs-as-${var.environment_id}"
-  assume_role_policy = "${data.aws_iam_policy_document.ecs-assume-role-policy.json}"
+  assume_role_policy = data.aws_iam_policy_document.ecs-assume-role-policy.json
 }
 
 # ECS Task Execution Role for MHS
@@ -61,16 +61,16 @@ data "aws_iam_policy_document" "mhs-ecs-assume-role-policy" {
 
 resource "aws_iam_role" "mhs-ecs" {
   name               = "mhs-${var.environment_id}-EcsTaskExecutionRole"
-  assume_role_policy = "${data.aws_iam_policy_document.mhs-ecs-assume-role-policy.json}"
+  assume_role_policy = data.aws_iam_policy_document.mhs-ecs-assume-role-policy.json
 }
 
 resource "aws_iam_role_policy_attachment" "ssm-readonly-attach" {
-  role       = "${aws_iam_role.mhs-ecs.name}"
+  role       = aws_iam_role.mhs-ecs.name
   policy_arn = "arn:aws:iam::aws:policy/AmazonSSMReadOnlyAccess"
 }
 
 resource "aws_iam_role_policy_attachment" "ecs-task-exec-attach" {
-  role       = "${aws_iam_role.mhs-ecs.name}"
+  role       = aws_iam_role.mhs-ecs.name
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
 }
 
@@ -88,10 +88,10 @@ data "aws_iam_policy_document" "read-secrets" {
 
 resource "aws_iam_policy" "read-secrets" {
   name   = "mhs-${var.environment_id}-read-secrets"
-  policy = "${data.aws_iam_policy_document.read-secrets.json}"
+  policy = data.aws_iam_policy_document.read-secrets.json
 }
 
 resource "aws_iam_role_policy_attachment" "ecs-read-secrets-attach" {
-  role       = "${aws_iam_role.mhs-ecs.name}"
+  role       = aws_iam_role.mhs-ecs.name
   policy_arn = aws_iam_policy.read-secrets.arn
 }
