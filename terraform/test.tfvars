@@ -39,7 +39,7 @@ mhs_forward_reliable_endpoint_url  = "https://msg.int.spine2.ncrs.nhs.uk/reliabl
 # There is only one ldaps service on
 # https://digital.nhs.uk/services/path-to-live-environments/integration-environment#system-urls
 # It seems so based on usage in code, search for SDS_URL.
-# Opentest experiments showed that this MUST BE AN IP!!
-spineroutelookup_service_sds_url    = "ldaps://10.196.94.141:636"
+# PTL-I experiments showed that this must be a domain name so that it matches with common name on certificate
+spineroutelookup_service_sds_url    = "ldaps://ldap.nis1.national.ncrs.nhs.uk:636"
 spineroutelookup_service_search_base = "ou=services,o=nhs"
 spineroutelookup_service_disable_sds_tls = "False" # Must be false in PTL due to ldaps usage (as opposed to ldap in opentest)
