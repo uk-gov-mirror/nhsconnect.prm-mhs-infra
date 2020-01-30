@@ -31,7 +31,7 @@ mhs_forward_reliable_endpoint_url  = "https://192.168.128.11/reliablemessaging/f
 # have a look at curl to PDS, SDS in dev-network from a bastion
 # The SDS URL the Spine Route Lookup service should communicate with.
 # The LDAP location the Spine Route Lookup service should use as the base of its searches when querying SDS.
-# Opentest experiments showed that this MUST BE AN IP!!
-spineroutelookup_service_sds_url    = "ldap://192.168.128.11:389"
+
+spineroutelookup_service_sds_url    = "ldap://192.168.128.11:389" # It seems so based on code usage, search for SDS_URL. MUST BE AN IP!!
 spineroutelookup_service_search_base = "ou=services,o=nhs"
 spineroutelookup_service_disable_sds_tls = "True" # Makes sense for opentest
