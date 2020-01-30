@@ -10,7 +10,7 @@ mhs_outbound_service_maximum_instance_count = 2
 mhs_outbound_service_minimum_instance_count = 1
 mhs_route_service_maximum_instance_count = 2
 mhs_route_service_minimum_instance_count = 1
-mhs_log_level                       = "INFO"
+mhs_log_level                       = "DEBUG"
 elasticache_node_type               = "cache.t3.micro"
 supplier_vpc_id                     = "vpc-0918f832cc6eb6370" # That should be deductions-private. TODO: from SSM
 
