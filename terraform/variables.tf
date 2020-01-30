@@ -16,6 +16,10 @@ variable "nlb_deletion_protection" {}
 
 variable "use_opentest" {}
 
+variable "spine_cidr" {
+  default = "0.0.0.0/0" # FIXME: narrow down to only the services that we talk to
+}
+
 variable "use_existing_vpc" {
   default = ""
   description = "Rather than creating a new VPC, we re-use existing one. This is required until we get proper setup with a transit gateway."
