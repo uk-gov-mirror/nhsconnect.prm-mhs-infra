@@ -27,3 +27,7 @@ data "aws_ssm_parameter" "amqp-endpoint-0" {
 data "aws_ssm_parameter" "amqp-endpoint-1" {
   name        = "/NHS/${var.environment_id}-${data.aws_caller_identity.current.account_id}/amqp-endpoint/1"
 }
+
+data "aws_ssm_parameter" "amqp-endpoint-active" {
+  name        = "/NHS/${var.environment_id}-${data.aws_caller_identity.current.account_id}/amqp-endpoint/active"
+}
