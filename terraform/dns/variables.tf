@@ -7,3 +7,4 @@ variable "subnet_ids" {}
 variable "vpc_id" {}
 variable "allowed_cidr" {}
 variable "ssh_keypair_name" {}
+variable "environment_id" {}
