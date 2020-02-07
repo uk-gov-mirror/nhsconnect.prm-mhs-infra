@@ -41,6 +41,9 @@ pipelines:
       docker:
         pipeline: mhs-docker-images
         stage: build
+      docker_dns_images:
+        pipeline: mhs-dns-images
+        stage: test
     environment_variables:
       NHS_ENVIRONMENT: dev
     stages:
@@ -65,6 +68,17 @@ pipelines:
                     arguments:
                       - -c
                       - ./tasks e2e_tests
+            dns:
+              resources:
+                - dev
+                - mhs
+              tasks:
+                - exec:
+                    command: /bin/bash
+                    working_directory: prm-mhs-infra
+                    arguments:
+                      - -c
+                      - ./tasks test_dns
 
   "prm-mhs-infra-ptl-integration":
     group: mhs
@@ -83,6 +97,9 @@ pipelines:
       docker:
         pipeline: mhs-docker-images
         stage: build
+      docker_dns_images:
+        pipeline: mhs-dns-images
+        stage: test
       dev_env:
         pipeline: prm-mhs-infra-opentest
         stage: deploy #FIXME: actually should depend on tests, but opentest tests are failing now
@@ -117,3 +134,14 @@ pipelines:
                     arguments:
                       - -c
                       - ./tasks functional_tests
+            dns:
+              resources:
+                - test
+                - mhs
+              tasks:
+                - exec:
+                    command: /bin/bash
+                    working_directory: prm-mhs-infra
+                    arguments:
+                      - -c
+                      - ./tasks test_dns

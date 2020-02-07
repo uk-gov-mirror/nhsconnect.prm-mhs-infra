@@ -81,6 +81,16 @@ resource "aws_security_group_rule" "mhs_outbound_security_group_cloudwatch_egres
   description = "HTTPS connections to Cloudwatch endpoint"
 }
 
+resource "aws_security_group_rule" "mhs_outbound_security_group_dns_udp_egress_rule" {
+  security_group_id = aws_security_group.mhs_outbound_security_group.id
+  type = "egress"
+  from_port = 53
+  to_port = 53
+  protocol = "udp"
+  source_security_group_id = module.dns.security_group_id
+  description = "DNS queries to local DNS servers"
+}
+
 ###################
 # MHS route security group
 ###################
@@ -153,6 +163,16 @@ resource "aws_security_group_rule" "mhs_route_security_group_cloudwatch_egress_r
   protocol = "tcp"
   source_security_group_id = aws_security_group.cloudwatch_security_group.id
   description = "HTTPS connections to Cloudwatch endpoint"
+}
+
+resource "aws_security_group_rule" "mhs_route_security_group_dns_udp_egress_rule" {
+  security_group_id = aws_security_group.mhs_route_security_group.id
+  type = "egress"
+  from_port = 53
+  to_port = 53
+  protocol = "udp"
+  source_security_group_id = module.dns.security_group_id
+  description = "DNS queries to local DNS servers"
 }
 
 ###################
@@ -243,6 +263,17 @@ resource "aws_security_group_rule" "mhs_inbound_security_group_cloudwatch_egress
   description = "HTTPS connections to Cloudwatch endpoint"
 }
 
+# Egress rule to allow requests to local DNS
+resource "aws_security_group_rule" "mhs_inbound_security_group_dns_udp_egress_rule" {
+  security_group_id = aws_security_group.mhs_inbound_security_group.id
+  type = "egress"
+  from_port = 53
+  to_port = 53
+  protocol = "udp"
+  source_security_group_id = module.dns.security_group_id
+  description = "DNS queries to local DNS servers"
+}
+
 ###################
 # VPC endpoint security groups
 ###################
@@ -273,6 +304,15 @@ resource "aws_security_group" "ecr_security_group" {
     # Allow requests from GoCD agent
     cidr_blocks = [ local.public_subnet_cidr ]
     description = "Allow inbound HTTPS requests from GoCD agent"
+  }
+
+  ingress {
+    from_port = 443
+    to_port = 443
+    protocol = "tcp"
+    # Allow requests from DNS server instances
+    security_groups = [ module.dns.security_group_id ]
+    description = "Allow inbound HTTPS requests from DNS servers to pull docker images"
   }
 
   tags = {

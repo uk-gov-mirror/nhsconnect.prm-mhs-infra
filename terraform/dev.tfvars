@@ -35,3 +35,7 @@ mhs_forward_reliable_endpoint_url  = "https://192.168.128.11/reliablemessaging/f
 spineroutelookup_service_sds_url    = "ldap://192.168.128.11:389" # It seems so based on code usage, search for SDS_URL. MUST BE AN IP!!
 spineroutelookup_service_search_base = "ou=services,o=nhs"
 spineroutelookup_service_disable_sds_tls = "True" # Makes sense for opentest
+
+# OpenTest does not have dedicated DNSes, HSCN is not connected. Therefore we use public, internet-wide DNSes
+dns_hscn_forward_server_1 = "1.0.0.1"
+dns_hscn_forward_server_2 = "1.1.1.1"

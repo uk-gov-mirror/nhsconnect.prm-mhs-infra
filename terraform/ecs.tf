@@ -44,6 +44,14 @@ resource "aws_cloudwatch_log_group" "mhs_route_log_group" {
 locals {
   mhs_outbound_base_environment_vars = [
     {
+      name = "DNS_SERVER_1",
+      value = module.dns.dns_ip_addresses[0]
+    },
+    {
+      name = "DNS_SERVER_2",
+      value = module.dns.dns_ip_addresses[1]
+    },
+    {
       name = "MHS_LOG_LEVEL"
       value = var.mhs_log_level
     },
@@ -181,7 +189,16 @@ resource "aws_ecs_task_definition" "mhs_inbound_task" {
         {
           name = "MHS_INBOUND_QUEUE_URL"
           value = "${local.inbound_queue_host}/${var.inbound_queue_name}"
+        },
+        {
+          name = "DNS_SERVER_1",
+          value = module.dns.dns_ip_addresses[0]
+        },
+        {
+          name = "DNS_SERVER_2",
+          value = module.dns.dns_ip_addresses[1]
         }
+
       ]
       secrets = [
         {
@@ -258,6 +275,14 @@ resource "aws_ecs_task_definition" "mhs_route_task" {
       name = "mhs-route"
       image = "${local.ecr_address}/mhs-route:${var.build_id}"
       environment = [
+        {
+          name = "DNS_SERVER_1",
+          value = module.dns.dns_ip_addresses[0]
+        },
+        {
+          name = "DNS_SERVER_2",
+          value = module.dns.dns_ip_addresses[1]
+        },
         {
           name = "MHS_LOG_LEVEL"
           value = var.mhs_log_level

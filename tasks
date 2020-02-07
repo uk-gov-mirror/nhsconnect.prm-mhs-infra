@@ -16,13 +16,17 @@ fi
 function tf_plan {
   operation=$1
 
+  if [ -z "${DNS_IMAGE_TAG}" ]; then
+    DNS_IMAGE_TAG=$(git rev-parse HEAD | cut -c 1-7)
+  fi
+
   cd terraform/
   terraform init -backend-config key=${NHS_SERVICE}-${NHS_ENVIRONMENT}/terraform.tfstate
   terraform get # modules
   if [[ "${operation}" == "create" ]]; then
-    terraform plan -var build_id=$MHS_IMAGE_TAG -var-file=${NHS_ENVIRONMENT}.tfvars -out="nhs_deployment.tfplan"
+    terraform plan -var unbound_image_version=$DNS_IMAGE_TAG -var build_id=$MHS_IMAGE_TAG -var-file=${NHS_ENVIRONMENT}.tfvars -out="nhs_deployment.tfplan"
   elif [[ "${operation}" == "destroy" ]]; then
-    terraform plan -var build_id=$MHS_IMAGE_TAG -var-file=${NHS_ENVIRONMENT}.tfvars -out="nhs_deployment.tfplan" -destroy
+    terraform plan -var unbound_image_version=$DNS_IMAGE_TAG -var build_id=$MHS_IMAGE_TAG -var-file=${NHS_ENVIRONMENT}.tfvars -out="nhs_deployment.tfplan" -destroy
   else
     echo "Unknown operation (should be create or destroy), got: ${operation}"
     exit 1
@@ -46,7 +50,7 @@ function check_env {
 
 function generate_ssh_key {
   secret_id="/NHS/deductions/mhs-opentest/id_rsa"
-  ssh_directory=terraform/transit-opentest/ssh
+  ssh_directory=terraform/ssh
   mkdir -p ${ssh_directory}/
   if [[ ! -f "${ssh_directory}/id_rsa" ]]; then
     #TODO check aws authentication
@@ -126,6 +130,16 @@ function docker_login {
   eval $(dojo "aws ecr get-login --no-include-email --region $AWS_DEFAULT_REGION")
 }
 
+function get_aws_value {
+  secret_id=$1
+  json=$(aws ssm get-parameter --region $AWS_DEFAULT_REGION --name $secret_id)
+  if [ $? != 0 ]; then
+    >&2 echo "Failed to obtain SSM value: $secret_id"
+    exit 5
+  fi
+  echo $json | jq -r ".Parameter.Value"
+}
+
 command="$1"
 case "${command}" in
   _ssh_key)
@@ -186,6 +200,27 @@ case "${command}" in
       ;;
   test_docker_dns)
       echo "TODO: dns docker image tests"
+      ;;
+  _test_dns)
+      check_env
+      AWS_ACCOUNT_ID=$(aws sts get-caller-identity | jq -r .Account)
+      DNS_SERVERS=$(get_aws_value "/NHS/deductions-${AWS_ACCOUNT_ID}/mhs-${NHS_ENVIRONMENT}/dns_servers")
+      DNS_SERVER_1=$(echo "${DNS_SERVERS}" | awk -F "," '{print $1}')
+      DNS_SERVER_2=$(echo "${DNS_SERVERS}" | awk -F "," '{print $2}')
+      echo "Querying a public domain: redhat.com"
+      set -x
+      dig redhat.com @${DNS_SERVER_1} | grep 'Got answer'
+      dig redhat.com @${DNS_SERVER_2} | grep 'Got answer'
+      echo "OK. Received reply for a public domain"
+      if [ "${NHS_ENVIRONMENT}" == "test" ]; then
+        echo "Querying for private domain on HSCN network: nww.int.spine2.ncrs.nhs.uk"
+        dig nww.int.spine2.ncrs.nhs.uk @${DNS_SERVER_1} | grep 'Got answer'
+        dig nww.int.spine2.ncrs.nhs.uk @${DNS_SERVER_2} | grep 'Got answer'
+        echo "OK. Received reply for an HSCN domain"
+      fi
+      ;;
+  test_dns)
+      dojo "./tasks _test_dns"
       ;;
   _generate_certs)
       check_env

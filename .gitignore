@@ -4,3 +4,4 @@
 /terraform/tf-out.json
 /terraform-patch/terraform.tfstate*
 /terraform-patch/.terraform/
+/terraform/ssh/

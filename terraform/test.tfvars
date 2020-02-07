@@ -43,3 +43,6 @@ mhs_forward_reliable_endpoint_url  = "https://msg.int.spine2.ncrs.nhs.uk/reliabl
 spineroutelookup_service_sds_url    = "ldaps://10.196.94.141:636"
 spineroutelookup_service_search_base = "ou=services,o=nhs"
 spineroutelookup_service_disable_sds_tls = "False" # Must be false in PTL due to ldaps usage (as opposed to ldap in opentest)
+
+dns_hscn_forward_server_1 = "155.231.231.1"
+dns_hscn_forward_server_2 = "155.231.231.2"

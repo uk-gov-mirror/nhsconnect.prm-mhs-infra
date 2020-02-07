@@ -12,6 +12,10 @@ variable "recipient_ods_code" {
   description = "ODS code that was used for the MHS (CMA endpoint) registration"
 }
 
+variable "dns_hscn_forward_server_1" {}
+variable "dns_hscn_forward_server_2" {}
+variable "unbound_image_version" {}
+
 variable "nlb_deletion_protection" {}
 
 variable "use_opentest" {}

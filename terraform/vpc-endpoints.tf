@@ -21,7 +21,7 @@ resource "aws_vpc_endpoint" "dynamodb_endpoint" {
   }
 }
 
-# ECR VPC endpoint
+# ECR VPC docker API endpoint
 resource "aws_vpc_endpoint" "ecr_endpoint" {
   vpc_id = local.mhs_vpc_id
   service_name = "com.amazonaws.${var.region}.ecr.dkr"
@@ -36,7 +36,27 @@ resource "aws_vpc_endpoint" "ecr_endpoint" {
   subnet_ids = local.subnet_ids
 
   tags = {
-    Name = "${var.environment_id}-ecr-endpoint"
+    Name = "${var.environment_id}-ecr-docker-endpoint"
+    EnvironmentId = var.environment_id
+  }
+}
+
+# ECR VPC API endpoint - needed for docker login
+resource "aws_vpc_endpoint" "ecr_api_endpoint" {
+  vpc_id = local.mhs_vpc_id
+  service_name = "com.amazonaws.${var.region}.ecr.api"
+  vpc_endpoint_type = "Interface"
+  private_dns_enabled = true
+
+  security_group_ids = [
+    aws_security_group.ecr_security_group.id
+  ]
+
+  # An endpoint network interface is created in all of the subnets we have created.
+  subnet_ids = local.subnet_ids
+
+  tags = {
+    Name = "${var.environment_id}-ecr-api-endpoint"
     EnvironmentId = var.environment_id
   }
 }
