@@ -323,6 +323,7 @@ sed \
             ###########################################################################
             # FORWARD ZONEs
             ###########################################################################
+            module-config: "iterator"
             forward-zone:
                 # Forward NHS Spine queries to specific DNSes
                 name: "ncrs.nhs.uk"
