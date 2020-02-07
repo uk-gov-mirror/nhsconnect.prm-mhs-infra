@@ -44,14 +44,6 @@ resource "aws_cloudwatch_log_group" "mhs_route_log_group" {
 locals {
   mhs_outbound_base_environment_vars = [
     {
-      name = "DNS_SERVER_1",
-      value = module.dns.dns_ip_addresses[0]
-    },
-    {
-      name = "DNS_SERVER_2",
-      value = module.dns.dns_ip_addresses[1]
-    },
-    {
       name = "MHS_LOG_LEVEL"
       value = var.mhs_log_level
     },
@@ -111,12 +103,29 @@ locals {
 # MHS outbound ECS task definition
 resource "aws_ecs_task_definition" "mhs_outbound_task" {
   family = "${var.environment_id}-mhs-outbound"
+  depends_on = [module.dns]
   container_definitions = jsonencode(
   [
     {
       name = "mhs-outbound"
       image = "${local.ecr_address}/mhs-outbound:${var.build_id}"
-      environment = var.mhs_outbound_http_proxy == "" ? local.mhs_outbound_base_environment_vars : concat(local.mhs_outbound_base_environment_vars, [
+      environment = var.mhs_outbound_http_proxy == "" ? concat(local.mhs_outbound_base_environment_vars,
+      [{
+        name = "DNS_SERVER_1",
+        value = module.dns.dns_ip_addresses[0]
+      },
+      {
+        name = "DNS_SERVER_2",
+        value = module.dns.dns_ip_addresses[1]
+      }]) : concat(local.mhs_outbound_base_environment_vars, [
+        {
+          name = "DNS_SERVER_1",
+          value = module.dns.dns_ip_addresses[0]
+        },
+        {
+          name = "DNS_SERVER_2",
+          value = module.dns.dns_ip_addresses[1]
+        },
         {
           name = "MHS_OUTBOUND_HTTP_PROXY"
           value = var.mhs_outbound_http_proxy
@@ -168,6 +177,7 @@ resource "aws_ecs_task_definition" "mhs_outbound_task" {
 # MHS inbound ECS task definition
 resource "aws_ecs_task_definition" "mhs_inbound_task" {
   family = "${var.environment_id}-mhs-inbound"
+  depends_on = [module.dns]
   container_definitions = jsonencode(
   [
     {
@@ -269,6 +279,7 @@ resource "aws_ecs_task_definition" "mhs_inbound_task" {
 # Create an ECS task definition for the MHS route service container image.
 resource "aws_ecs_task_definition" "mhs_route_task" {
   family = "${var.environment_id}-mhs-route"
+  depends_on = [module.dns]
   container_definitions = jsonencode(
   [
     {
