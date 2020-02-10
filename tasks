@@ -14,14 +14,15 @@ if [ -z "${MHS_IMAGE_TAG}" ]; then
 fi
 
 if [ -z "${DNS_IMAGE_TAG}" ]; then
-  DNS_IMAGE_TAG="${GO_REVISION_INTEGRATION_ADAPTORS:-alpha}"
+  DNS_IMAGE_TAG="${GO_DEPENDENCY_LABEL_DOCKER_DNS_IMAGES:-alpha}"
 fi
 
 function tf_plan {
   operation=$1
 
   if [ -z "${DNS_IMAGE_TAG}" ]; then
-    DNS_IMAGE_TAG=$(git rev-parse HEAD | cut -c 1-7)
+    echo "DNS_IMAGE_TAG must be set"
+    exit 3
   fi
 
   cd terraform/
