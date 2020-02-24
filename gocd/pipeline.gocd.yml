@@ -119,7 +119,7 @@ pipelines:
                     working_directory: prm-mhs-infra
                     arguments:
                       - -c
-                      - ./tasks nlb_ips
+                      - ./tasks nlb_ips create
       - test:
           clean_workspace: true
           jobs:

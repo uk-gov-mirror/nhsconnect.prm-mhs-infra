@@ -8,3 +8,4 @@ variable "vpc_id" {}
 variable "allowed_cidr" {}
 variable "ssh_keypair_name" {}
 variable "environment_id" {}
+variable "mock_input" {}

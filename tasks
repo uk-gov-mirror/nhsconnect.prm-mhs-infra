@@ -160,11 +160,11 @@ case "${command}" in
       dojo "bash"
       ;;
   _tf_plan)
+      ./tasks _ssh_key
       tf_plan "$2"
       ;;
   tf_plan)
       check_env
-      ./tasks ssh_key
       dojo "./tasks _tf_plan $2"
       ;;
   _tf_apply)
@@ -178,11 +178,15 @@ case "${command}" in
   _nlb_ips)
       cd terraform-patch
       terraform init -backend-config key=${NHS_SERVICE}-${NHS_ENVIRONMENT}/terraform-patch.tfstate
-      terraform apply -auto-approve -var environment=$NHS_ENVIRONMENT
+      if [ "$2" == "create" ]; then 
+        terraform apply -auto-approve -var environment=$NHS_ENVIRONMENT
+      elif [ "$2" == "destroy" ]; then
+        terraform destroy -var environment=$NHS_ENVIRONMENT
+      fi
       ;;
   nlb_ips)
       check_env
-      dojo "./tasks _nlb_ips"
+      dojo "./tasks _nlb_ips $2"
       ;;
   _test_dns)
       check_env
