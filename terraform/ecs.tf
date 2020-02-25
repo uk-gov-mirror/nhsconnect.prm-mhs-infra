@@ -201,6 +201,10 @@ resource "aws_ecs_task_definition" "mhs_inbound_task" {
           value = "${local.inbound_queue_host}/${var.inbound_queue_name}"
         },
         {
+          name = "MHS_INBOUND_RAW_QUEUE_URL"
+          value = "${local.inbound_queue_host}/${var.inbound_raw_queue_name}"
+        },
+        {
           name = "DNS_SERVER_1",
           value = module.dns.dns_ip_addresses[0]
         },
