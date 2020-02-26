@@ -178,7 +178,7 @@ case "${command}" in
   _nlb_ips)
       cd terraform-patch
       terraform init -backend-config key=${NHS_SERVICE}-${NHS_ENVIRONMENT}/terraform-patch.tfstate
-      if [ "$2" == "create" ]; then 
+      if [ "$2" == "create" ]; then
         terraform apply -auto-approve -var environment=$NHS_ENVIRONMENT
       elif [ "$2" == "destroy" ]; then
         terraform destroy -var environment=$NHS_ENVIRONMENT
@@ -208,6 +208,27 @@ case "${command}" in
       ;;
   test_dns)
       dojo "./tasks _test_dns"
+      ;;
+  _wait_for_dns)
+      check_env
+      AWS_ACCOUNT_ID=$(aws sts get-caller-identity | jq -r .Account)
+      DNS_SERVERS=$(get_aws_value "/NHS/deductions-${AWS_ACCOUNT_ID}/mhs-${NHS_ENVIRONMENT}/dns_servers")
+      DNS_SERVER_1=$(echo "${DNS_SERVERS}" | awk -F "," '{print $1}')
+      DNS_SERVER_2=$(echo "${DNS_SERVERS}" | awk -F "," '{print $2}')
+      echo "Waiting for DNS servers to be ready"
+
+      rm -f ./retry
+      curl https://raw.githubusercontent.com/kadwanev/retry/master/retry -o ./retry
+      chmod +x retry
+
+      SLEEP_TIME=1
+      DIG_TIMEOUT=1
+      TRIES=60
+      ./retry -v --tries=$TRIES --sleep=$SLEEP_TIME "1>&2 dig +timeout=$DIG_TIMEOUT redhat.com @${DNS_SERVER_1} & dig +timeout=$DIG_TIMEOUT redhat.com @${DNS_SERVER_1} | grep 'Got answer'"
+      ./retry -v --tries=$TRIES --sleep=$SLEEP_TIME "1>&2 dig +timeout=$DIG_TIMEOUT redhat.com @${DNS_SERVER_2} & dig +timeout=$DIG_TIMEOUT redhat.com @${DNS_SERVER_2} | grep 'Got answer'"
+      ;;
+  wait_for_dns)
+      dojo "./tasks _wait_for_dns"
       ;;
   _generate_certs)
       check_env

@@ -54,6 +54,18 @@ pipelines:
               resources:
                 - docker
               tasks: *deploy_tasks
+      - wait_dns:
+          clean_workspace: true
+          resources:
+            - dev
+            - mhs
+          tasks:
+            - exec:
+                command: /bin/bash
+                working_directory: prm-mhs-infra
+                arguments:
+                  - -c
+                  - ./tasks wait_for_dns
       - test:
           clean_workspace: true
           jobs:
@@ -91,7 +103,7 @@ pipelines:
         stage: test
       dev_env:
         pipeline: prm-mhs-infra-opentest
-        stage: deploy #FIXME: actually should depend on tests, but opentest tests are failing now
+        stage: test
     environment_variables:
       NHS_ENVIRONMENT: test
     stages:
@@ -109,6 +121,18 @@ pipelines:
                     arguments:
                       - -c
                       - ./tasks nlb_ips create
+      - wait_dns:
+          clean_workspace: true
+          resources:
+            - test
+            - mhs
+          tasks:
+            - exec:
+                command: /bin/bash
+                working_directory: prm-mhs-infra
+                arguments:
+                  - -c
+                  - ./tasks wait_for_dns
       - test:
           clean_workspace: true
           jobs:
