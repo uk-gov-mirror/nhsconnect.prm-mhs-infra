@@ -57,17 +57,6 @@ pipelines:
       - test:
           clean_workspace: true
           jobs:
-            e2e:
-              resources:
-                - dev
-                - mhs
-              tasks:
-                - exec:
-                    command: /bin/bash
-                    working_directory: integration-adaptors
-                    arguments:
-                      - -c
-                      - ./tasks e2e_tests
             dns:
               resources:
                 - dev
