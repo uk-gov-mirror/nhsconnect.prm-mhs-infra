@@ -19,6 +19,9 @@ variable "inbound_raw_queue_name" {
 variable "dns_hscn_forward_server_1" {}
 variable "dns_hscn_forward_server_2" {}
 variable "unbound_image_version" {}
+variable "deregistration_delay" {
+  default = 30
+}
 
 variable "nlb_deletion_protection" {}
 

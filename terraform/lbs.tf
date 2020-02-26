@@ -42,6 +42,7 @@ resource "aws_lb_target_group" "outbound_alb_target_group" {
   protocol = "HTTP"
   target_type = "ip"
   vpc_id = local.mhs_vpc_id
+  deregistration_delay = var.deregistration_delay
 
   health_check {
     path = "/healthcheck"
@@ -114,6 +115,7 @@ resource "aws_lb_target_group" "route_alb_target_group" {
   protocol = "HTTP"
   target_type = "ip"
   vpc_id = local.mhs_vpc_id
+  deregistration_delay = var.deregistration_delay
 
   health_check {
     path = "/healthcheck"
@@ -191,6 +193,7 @@ resource "aws_lb_target_group" "inbound_nlb_target_group" {
   protocol = "TCP"
   target_type = "ip"
   vpc_id = local.mhs_vpc_id
+  deregistration_delay = var.deregistration_delay
 
   health_check {
     protocol = "HTTP"
