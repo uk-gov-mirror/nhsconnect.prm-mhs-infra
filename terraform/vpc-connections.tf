@@ -15,6 +15,8 @@
 # Supplier VPC
 ##############
 
+
+
 # VPC peering connection
 resource "aws_vpc_peering_connection" "supplier_peering_connection" {
   peer_vpc_id = var.supplier_vpc_id
@@ -46,6 +48,13 @@ data "aws_ssm_parameter" "public_rtb" {
 
 resource "aws_route" "private_supplier_to_mhs_route" {
   route_table_id = data.aws_ssm_parameter.private_rtb.value
+  destination_cidr_block = local.mhs_vpc_cidr_block
+  vpc_peering_connection_id = aws_vpc_peering_connection.supplier_peering_connection.id
+}
+
+# Needed by VPN to reach MHS
+resource "aws_route" "public_supplier_to_mhs_route" {
+  route_table_id = data.aws_ssm_parameter.public_rtb.value
   destination_cidr_block = local.mhs_vpc_cidr_block
   vpc_peering_connection_id = aws_vpc_peering_connection.supplier_peering_connection.id
 }
