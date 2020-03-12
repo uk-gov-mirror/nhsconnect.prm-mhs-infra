@@ -35,7 +35,7 @@ pipelines:
         type: configrepo
         destination: prm-mhs-infra
       integration_adaptors:
-        git: https://github.com/tomzo/integration-adaptors.git
+        git: https://github.com/nhsconnect/prm-deductions-integration-adaptors.git
         branch: deductions
         destination: integration-adaptors
       docker:
@@ -89,7 +89,7 @@ pipelines:
         type: configrepo
         destination: prm-mhs-infra
       integration_adaptors:
-        git: https://github.com/tomzo/integration-adaptors.git
+        git: https://github.com/nhsconnect/prm-deductions-integration-adaptors.git
         branch: deductions
         destination: integration-adaptors
       system_integration:
