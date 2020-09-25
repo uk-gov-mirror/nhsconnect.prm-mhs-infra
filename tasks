@@ -26,7 +26,7 @@ function tf_plan {
   fi
 
   cd terraform/
-  terraform init -backend-config key=${NHS_SERVICE}-${NHS_ENVIRONMENT}/terraform.tfstate
+  terraform init -reconfigure -backend-config key=${NHS_SERVICE}-${NHS_ENVIRONMENT}/terraform.tfstate
   terraform get # modules
   if [[ "${operation}" == "create" ]]; then
     terraform plan -var unbound_image_version=$DNS_IMAGE_TAG -var build_id=$MHS_IMAGE_TAG -var-file=${NHS_ENVIRONMENT}.tfvars -out="nhs_deployment.tfplan"
