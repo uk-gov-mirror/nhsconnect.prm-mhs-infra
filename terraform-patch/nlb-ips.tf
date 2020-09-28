@@ -11,7 +11,7 @@ locals {
 data "aws_caller_identity" "current" {}
 
 data "aws_ssm_parameter" "mhs_vpc" {
-  name = "/NHS/deductions-${data.aws_caller_identity.current.account_id}/mhs-${var.environment}/vpc_id"
+  name = "/repo/${var.environment}/prm-mhs-infra/user-input/mhs-vpc-id"
 }
 
 data "aws_network_interfaces" "this" {

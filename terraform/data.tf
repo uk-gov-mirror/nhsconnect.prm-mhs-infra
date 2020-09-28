@@ -5,7 +5,7 @@ data "aws_caller_identity" "current" {}
 data "aws_availability_zones" "all" {}
 
 data "aws_ssm_parameter" "spine_org_code" {
-  name = "/NHS/deductions-${local.account_id}/opentest/spine_org_code"
+  name = "/repo/dev/prm-mhs-infra/user-input/opentest-spine-org-code"
 }
 
 data "aws_vpc" "supplier_vpc" {
@@ -13,21 +13,21 @@ data "aws_vpc" "supplier_vpc" {
 }
 
 data "aws_ssm_parameter" "mq-app-username" {
-  name = "/nhs/${var.environment_id}/mq/app-username"
+  name = "/repo/${var.environment_id}/prm-deductions-infra/user-input/mq-app-username"
 }
 
 data "aws_ssm_parameter" "mq-app-password" {
-  name = "/nhs/${var.environment_id}/mq/app-password"
+  name = "/repo/${var.environment_id}/prm-deductions-infra/user-input/mq-app-password"
 }
 
 data "aws_ssm_parameter" "amqp-endpoint-0" {
-  name        = "/NHS/${var.environment_id}-${data.aws_caller_identity.current.account_id}/amqp-endpoint/0"
+  name = "/repo/${var.environment_id}/prm-deductions-infra/output/amqp-endpoint-0"
 }
 
 data "aws_ssm_parameter" "amqp-endpoint-1" {
-  name        = "/NHS/${var.environment_id}-${data.aws_caller_identity.current.account_id}/amqp-endpoint/1"
+  name = "/repo/${var.environment_id}/prm-deductions-infra/output/amqp-endpoint-1"
 }
 
 data "aws_ssm_parameter" "amqp-endpoint-active" {
-  name        = "/NHS/${var.environment_id}-${data.aws_caller_identity.current.account_id}/amqp-endpoint/active"
+  name = "/repo/${var.environment_id}/prm-deductions-infra/output/amqp-endpoint-active"
 }

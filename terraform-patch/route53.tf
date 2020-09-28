@@ -1,9 +1,9 @@
 data "aws_ssm_parameter" "root_zone_id" {
-  name = "/NHS/deductions-${data.aws_caller_identity.current.account_id}/root_zone_id"
+  name = "/repo/prm-deductions-base-infra/output/root-zone-id"
 }
 
 data "aws_ssm_parameter" "route_dns_name" {
-  name = "/NHS/deductions-${data.aws_caller_identity.current.account_id}/mhs-${var.environment}/route_dns_name"
+  name = "/repo/${var.environment_id}/prm-mhs-infra/user-input/mhs-route-dns-name"
 }
 
 # Public DNS record for the MHS inbound component

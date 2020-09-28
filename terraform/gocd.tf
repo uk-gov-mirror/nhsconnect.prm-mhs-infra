@@ -13,19 +13,19 @@ module "gocd" {
 }
 
 data "aws_ssm_parameter" "gocd_vpc" {
-  name = "/NHS/deductions-${data.aws_caller_identity.current.account_id}/gocd-prod/vpc_id"
+  name = "/repo/prod/prm-gocd-infra/output/gocd-vpc-id"
 }
 
 data "aws_ssm_parameter" "gocd_zone_id" {
-  name = "/NHS/deductions-${data.aws_caller_identity.current.account_id}/gocd-prod/route53_zone_id"
+  name = "/repo/prod/prm-gocd-infra/output/gocd-route53-zone-id"
 }
 
 data "aws_ssm_parameter" "gocd_cidr_block" {
-  name = "/NHS/deductions-${data.aws_caller_identity.current.account_id}/gocd-prod/cidr_block"
+  name = "/repo/prod/prm-gocd-infra/output/gocd-cidr-block"
 }
 
 data "aws_ssm_parameter" "route_table_id" {
-  name = "/NHS/deductions-${data.aws_caller_identity.current.account_id}/gocd-prod/route_table_id"
+  name = "/repo/prod/prm-gocd-infra/output/gocd-route-table-id"
 }
 
 locals {
