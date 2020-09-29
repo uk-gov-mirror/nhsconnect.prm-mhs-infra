@@ -191,7 +191,7 @@ case "${command}" in
   _test_dns)
       check_env
       AWS_ACCOUNT_ID=$(aws sts get-caller-identity | jq -r .Account)
-      DNS_SERVERS=$(get_aws_value "/repo/${NHS_ENVIRONMENT}/prm-mhs-infra/user-input/mhs-dns-servers")
+      DNS_SERVERS=$(get_aws_value "/repo/${NHS_ENVIRONMENT}/prm-mhs-infra/output/mhs-dns-servers")
       DNS_SERVER_1=$(echo "${DNS_SERVERS}" | awk -F "," '{print $1}')
       DNS_SERVER_2=$(echo "${DNS_SERVERS}" | awk -F "," '{print $2}')
       echo "Querying a public domain: redhat.com"
@@ -212,7 +212,7 @@ case "${command}" in
   _wait_for_dns)
       check_env
       AWS_ACCOUNT_ID=$(aws sts get-caller-identity | jq -r .Account)
-      DNS_SERVERS=$(get_aws_value "/repo/${NHS_ENVIRONMENT}/prm-mhs-infra/user-input/mhs-dns-servers")
+      DNS_SERVERS=$(get_aws_value "/repo/${NHS_ENVIRONMENT}/prm-mhs-infra/output/mhs-dns-servers")
       DNS_SERVER_1=$(echo "${DNS_SERVERS}" | awk -F "," '{print $1}')
       DNS_SERVER_2=$(echo "${DNS_SERVERS}" | awk -F "," '{print $2}')
       echo "Waiting for DNS servers to be ready"

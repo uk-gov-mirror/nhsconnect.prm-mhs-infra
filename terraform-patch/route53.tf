@@ -3,7 +3,7 @@ data "aws_ssm_parameter" "root_zone_id" {
 }
 
 data "aws_ssm_parameter" "route_dns_name" {
-  name = "/repo/${var.environment_id}/prm-mhs-infra/user-input/mhs-route-dns-name"
+  name = "/repo/${var.environment_id}/prm-mhs-infra/output/mhs-route-dns-name"
 }
 
 # Public DNS record for the MHS inbound component

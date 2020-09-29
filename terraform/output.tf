@@ -37,13 +37,13 @@ resource "aws_ssm_parameter" "route_url" {
 }
 
 resource "aws_ssm_parameter" "mhs_vpc" {
-  name = "/repo/${var.environment_id}/prm-mhs-infra/user-input/mhs-vpc-id"
+  name = "/repo/${var.environment_id}/prm-mhs-infra/output/mhs-vpc-id"
   type  = "String"
   value = local.mhs_vpc_id
 }
 
 resource "aws_ssm_parameter" "dns_servers" {
-  name = "/repo/${var.environment_id}/prm-mhs-infra/user-input/mhs-dns-servers"
+  name = "/repo/${var.environment_id}/prm-mhs-infra/output/mhs-dns-servers"
   type  = "String"
   value = join(",", module.dns.dns_ip_addresses)
 }
