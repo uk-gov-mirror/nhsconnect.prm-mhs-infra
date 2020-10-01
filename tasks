@@ -54,7 +54,7 @@ function check_env {
 }
 
 function generate_ssh_key {
-  secret_id="/repo/dev/prm-mhs-infra/user-input/mhs-opentest-id-rsa"
+  secret_id="/repo/dev/user-input/mhs-opentest-id-rsa"
   ssh_directory=terraform/ssh
   mkdir -p ${ssh_directory}/
   if [[ ! -f "${ssh_directory}/id_rsa" ]]; then

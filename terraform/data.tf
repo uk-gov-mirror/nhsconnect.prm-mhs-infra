@@ -5,7 +5,7 @@ data "aws_caller_identity" "current" {}
 data "aws_availability_zones" "all" {}
 
 data "aws_ssm_parameter" "spine_org_code" {
-  name = "/repo/dev/${var.repo_name}/user-input/opentest-spine-org-code"
+  name = "/repo/dev/user-input/opentest-spine-org-code"
 }
 
 data "aws_vpc" "supplier_vpc" {
@@ -13,11 +13,11 @@ data "aws_vpc" "supplier_vpc" {
 }
 
 data "aws_ssm_parameter" "mq-app-username" {
-  name = "/repo/${var.environment}/prm-deductions-infra/user-input/mq-app-username"
+  name = "/repo/${var.environment}/user-input/mq-app-username"
 }
 
 data "aws_ssm_parameter" "mq-app-password" {
-  name = "/repo/${var.environment}/prm-deductions-infra/user-input/mq-app-password"
+  name = "/repo/${var.environment}/user-input/mq-app-password"
 }
 
 data "aws_ssm_parameter" "amqp-endpoint-0" {
