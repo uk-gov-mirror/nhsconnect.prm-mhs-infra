@@ -13,19 +13,19 @@ module "gocd" {
 }
 
 data "aws_ssm_parameter" "gocd_vpc" {
-  name = "/repo/prod/prm-gocd-infra/output/gocd-vpc-id"
+  name = "/repo/prod/output/prm-gocd-infra/gocd-vpc-id"
 }
 
 data "aws_ssm_parameter" "gocd_zone_id" {
-  name = "/repo/prod/prm-gocd-infra/output/gocd-route53-zone-id"
+  name = "/repo/prod/output/prm-gocd-infra/gocd-route53-zone-id"
 }
 
 data "aws_ssm_parameter" "gocd_cidr_block" {
-  name = "/repo/prod/prm-gocd-infra/output/gocd-cidr-block"
+  name = "/repo/prod/output/prm-gocd-infra/gocd-cidr-block"
 }
 
 data "aws_ssm_parameter" "route_table_id" {
-  name = "/repo/prod/prm-gocd-infra/output/gocd-route-table-id"
+  name = "/repo/prod/output/prm-gocd-infra/gocd-route-table-id"
 }
 
 locals {

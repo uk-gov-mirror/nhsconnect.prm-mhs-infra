@@ -96,7 +96,7 @@ output "inbound_lb_domain_name" {
 }
 
 resource "aws_ssm_parameter" "route_dns_name" {
-  name = "/repo/${var.environment}/${var.repo_name}/output/mhs-route-dns-name"
+  name = "/repo/${var.environment}/output/${var.repo_name}/mhs-route-dns-name"
   value = aws_route53_record.mhs_inbound_load_balancer_record.name
   type = "String"
   tags = {

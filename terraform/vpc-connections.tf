@@ -40,11 +40,11 @@ resource "aws_vpc_peering_connection" "supplier_peering_connection" {
 
 # Add a route to the MHS VPC in the supplier VPC route table
 data "aws_ssm_parameter" "private_rtb" {
-    name = "/repo/${var.environment}/prm-deductions-infra/output/tf-deductions-private-private-rtb"
+    name = "/repo/${var.environment}/output/prm-deductions-infra/tf-deductions-private-private-rtb"
 }
 
 data "aws_ssm_parameter" "public_rtb" {
-    name = "/repo/${var.environment}/prm-deductions-infra/output/tf-deductions-private-public-rtb"
+    name = "/repo/${var.environment}/output/prm-deductions-infra/tf-deductions-private-public-rtb"
 }
 
 resource "aws_route" "private_supplier_to_mhs_route" {

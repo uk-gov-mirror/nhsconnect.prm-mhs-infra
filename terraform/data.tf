@@ -21,13 +21,13 @@ data "aws_ssm_parameter" "mq-app-password" {
 }
 
 data "aws_ssm_parameter" "amqp-endpoint-0" {
-  name = "/repo/${var.environment}/prm-deductions-infra/output/amqp-endpoint-0"
+  name = "/repo/${var.environment}/output/prm-deductions-infra/amqp-endpoint-0"
 }
 
 data "aws_ssm_parameter" "amqp-endpoint-1" {
-  name = "/repo/${var.environment}/prm-deductions-infra/output/amqp-endpoint-1"
+  name = "/repo/${var.environment}/output/prm-deductions-infra/amqp-endpoint-1"
 }
 
 data "aws_ssm_parameter" "amqp-endpoint-active" {
-  name = "/repo/${var.environment}/prm-deductions-infra/output/amqp-endpoint-active"
+  name = "/repo/${var.environment}/output/prm-deductions-infra/amqp-endpoint-active"
 }
