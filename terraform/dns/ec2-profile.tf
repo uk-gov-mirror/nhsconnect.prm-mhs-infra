@@ -10,7 +10,7 @@ data "aws_iam_policy_document" "instance-assume-role-policy" {
 }
 
 resource "aws_iam_role" "dns-server" {
-  name               = "mhs-${var.environment_id}-dns-server"
+  name               = "mhs-${var.environment}-dns-server"
   assume_role_policy = data.aws_iam_policy_document.instance-assume-role-policy.json
 }
 
@@ -20,6 +20,6 @@ resource "aws_iam_role_policy_attachment" "ecr_read_attach" {
 }
 
 resource "aws_iam_instance_profile" "dns-server" {
-  name = "mhs-${var.environment_id}-dns-server"
+  name = "mhs-${var.environment}-dns-server"
   role = aws_iam_role.dns-server.name
 }

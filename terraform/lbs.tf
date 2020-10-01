@@ -8,7 +8,7 @@
 
 # Application load balancer for MHS outbound
 resource "aws_lb" "outbound_alb" {
-  name = "${var.environment_id}-mhs-outbound-alb"
+  name = "${var.environment}-mhs-outbound-alb"
   internal = true
   load_balancer_type = "application"
   subnets = local.subnet_ids
@@ -29,15 +29,16 @@ resource "aws_lb" "outbound_alb" {
   ]
 
   tags = {
-    Name = "${var.environment_id}-mhs-outbound-alb"
-    EnvironmentId = var.environment_id
+    Name = "${var.environment}-mhs-outbound-alb"
+    Environment = var.environment
+    CreatedBy = var.repo_name
   }
 }
 
 # Target group for the application load balancer for MHS outbound
 # The MHS outbound ECS service registers it's tasks here.
 resource "aws_lb_target_group" "outbound_alb_target_group" {
-  name = "${var.environment_id}-mhs-outbound"
+  name = "${var.environment}-mhs-outbound"
   port = 80
   protocol = "HTTP"
   target_type = "ip"
@@ -50,8 +51,9 @@ resource "aws_lb_target_group" "outbound_alb_target_group" {
   }
 
   tags = {
-    Name = "${var.environment_id}-mhs-outbound-alb-target-group"
-    EnvironmentId = var.environment_id
+    Name = "${var.environment}-mhs-outbound-alb-target-group"
+    Environment = var.environment
+    CreatedBy = var.repo_name
   }
 }
 
@@ -81,7 +83,7 @@ resource "aws_lb_listener" "outbound_alb_listener" {
 
 # Application load balancer for MHS route service
 resource "aws_lb" "route_alb" {
-  name = "${var.environment_id}-mhs-route-alb"
+  name = "${var.environment}-mhs-route-alb"
   internal = true
   load_balancer_type = "application"
   subnets = local.subnet_ids
@@ -102,15 +104,16 @@ resource "aws_lb" "route_alb" {
   ]
 
   tags = {
-    Name = "${var.environment_id}-mhs-route-alb"
-    EnvironmentId = var.environment_id
+    Name = "${var.environment}-mhs-route-alb"
+    Environment = var.environment
+    CreatedBy = var.repo_name
   }
 }
 
 # Target group for the application load balancer for MHS route service
 # The MHS route ECS service registers it's tasks here.
 resource "aws_lb_target_group" "route_alb_target_group" {
-  name = "${var.environment_id}-mhs-route"
+  name = "${var.environment}-mhs-route"
   port = 80
   protocol = "HTTP"
   target_type = "ip"
@@ -123,8 +126,9 @@ resource "aws_lb_target_group" "route_alb_target_group" {
   }
 
   tags = {
-    Name = "${var.environment_id}-mhs-route-alb-target-group"
-    EnvironmentId = var.environment_id
+    Name = "${var.environment}-mhs-route-alb-target-group"
+    Environment = var.environment
+    CreatedBy = var.repo_name
   }
 }
 
@@ -157,7 +161,7 @@ resource "aws_lb_listener" "route_alb_listener" {
 # have to use a network load balancer here and not an application load balancer,
 # to passthrough the SSL traffic.
 resource "aws_lb" "inbound_nlb" {
-  name = "${var.environment_id}-mhs-inbound-nlb"
+  name = "${var.environment}-mhs-inbound-nlb"
   internal = true
   load_balancer_type = "network"
   subnets = local.subnet_ids
@@ -180,15 +184,16 @@ resource "aws_lb" "inbound_nlb" {
   ]
 
   tags = {
-    Name = "${var.environment_id}-mhs-inbound-nlb"
-    EnvironmentId = var.environment_id
+    Name = "${var.environment}-mhs-inbound-nlb"
+    Environment = var.environment
+    CreatedBy = var.repo_name
   }
 }
 
 # Target group for the network load balancer for MHS inbound
 # The MHS inbound ECS service registers it's tasks here.
 resource "aws_lb_target_group" "inbound_nlb_target_group" {
-  name = "${var.environment_id}-mhs-inbound"
+  name = "${var.environment}-mhs-inbound"
   port = 443
   protocol = "TCP"
   target_type = "ip"
@@ -202,8 +207,9 @@ resource "aws_lb_target_group" "inbound_nlb_target_group" {
   }
 
   tags = {
-    Name = "${var.environment_id}-mhs-inbound-nlb-target-group"
-    EnvironmentId = var.environment_id
+    Name = "${var.environment}-mhs-inbound-nlb-target-group"
+    Environment = var.environment
+    CreatedBy = var.repo_name
   }
 }
 

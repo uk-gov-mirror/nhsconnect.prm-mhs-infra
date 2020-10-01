@@ -16,8 +16,9 @@ resource "aws_vpc_endpoint" "dynamodb_endpoint" {
   ]
 
   tags = {
-    Name = "${var.environment_id}-dynamodb-endpoint"
-    EnvironmentId = var.environment_id
+    Name = "${var.environment}-dynamodb-endpoint"
+    Environment = var.environment
+    CreatedBy = var.repo_name
   }
 }
 
@@ -36,8 +37,9 @@ resource "aws_vpc_endpoint" "ecr_endpoint" {
   subnet_ids = local.subnet_ids
 
   tags = {
-    Name = "${var.environment_id}-ecr-docker-endpoint"
-    EnvironmentId = var.environment_id
+    Name = "${var.environment}-ecr-docker-endpoint"
+    Environment = var.environment
+    CreatedBy = var.repo_name
   }
 }
 
@@ -56,8 +58,9 @@ resource "aws_vpc_endpoint" "ecr_api_endpoint" {
   subnet_ids = local.subnet_ids
 
   tags = {
-    Name = "${var.environment_id}-ecr-api-endpoint"
-    EnvironmentId = var.environment_id
+    Name = "${var.environment}-ecr-api-endpoint"
+    Environment = var.environment
+    CreatedBy = var.repo_name
   }
 }
 
@@ -70,8 +73,9 @@ resource "aws_vpc_endpoint" "s3_endpoint" {
   ]
 
   tags = {
-    Name = "${var.environment_id}-s3-endpoint"
-    EnvironmentId = var.environment_id
+    Name = "${var.environment}-s3-endpoint"
+    Environment = var.environment
+    CreatedBy = var.repo_name
   }
 }
 
@@ -90,7 +94,8 @@ resource "aws_vpc_endpoint" "cloudwatch_endpoint" {
   subnet_ids = local.subnet_ids
 
   tags = {
-    Name = "${var.environment_id}-cloudwatch-endpoint"
-    EnvironmentId = var.environment_id
+    Name = "${var.environment}-cloudwatch-endpoint"
+    Environment = var.environment
+    CreatedBy = var.repo_name
   }
 }

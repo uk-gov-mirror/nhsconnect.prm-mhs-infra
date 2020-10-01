@@ -4,6 +4,11 @@ variable "region" {
   description = "The AWS region to deploy to."
 }
 
+variable "repo_name" {
+  type = string
+  default = "prm-mhs-infra"
+}
+
 variable "my_ip" {
   default = "127.0.0.1"
 }
@@ -54,7 +59,7 @@ variable "testing_subnet" {
   description = "Network from which MHS ALBs should allow connections so that e2e tests can be executed"
 }
 
-variable "environment_id" {
+variable "environment" {
   type = string
   description = "An ID used to identify the environment being deployed by this configuration. As this is used as a prefix for the names of most resources this should be kept to 20 characters or less."
 }

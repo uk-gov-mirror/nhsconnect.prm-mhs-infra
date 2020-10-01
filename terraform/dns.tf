@@ -10,7 +10,7 @@ module "dns" {
     vpc_id                    = local.mhs_vpc_id
     allowed_cidr              = local.mhs_vpc_cidr_block
     ssh_keypair_name          = aws_key_pair.mhs-key.key_name
-    environment_id            = var.environment_id
+    environment            = var.environment
 
     # workaround to force endpoint to be created first
     mock_input = aws_vpc_endpoint.ecr_endpoint.id

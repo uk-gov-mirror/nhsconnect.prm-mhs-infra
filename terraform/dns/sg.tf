@@ -1,5 +1,5 @@
 resource "aws_security_group" "dns-sg" {
-    name        = "mhs-${var.environment_id}-dns-server-sg"
+    name        = "mhs-${var.environment}-dns-server-sg"
     description = "DNS server access in MHS VPC"
     vpc_id      = var.vpc_id
 
@@ -41,6 +41,8 @@ resource "aws_security_group" "dns-sg" {
     }
 
     tags = {
-        Name = "mhs-${var.environment_id}-dns-server"
+        Name = "mhs-${var.environment}-dns-server"
+        Environment = var.environment
+        CreatedBy = var.repo_name
     }
 }

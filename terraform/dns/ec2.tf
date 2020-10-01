@@ -21,6 +21,7 @@ resource "aws_instance" "dns" {
 
     tags = {
         Name = "mhs-dns-${count.index}"
+        CreatedBy = var.repo_name
     }
 }
 

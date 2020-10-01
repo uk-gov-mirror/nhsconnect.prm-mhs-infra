@@ -18,8 +18,9 @@ resource "aws_security_group" "mhs_outbound_security_group" {
   vpc_id = local.mhs_vpc_id
 
   tags = {
-    Name = "${var.environment_id}-mhs-outbound-sg"
-    EnvironmentId = var.environment_id
+    Name = "${var.environment}-mhs-outbound-sg"
+    Environment = var.environment
+    CreatedBy = var.repo_name
   }
 }
 
@@ -102,8 +103,9 @@ resource "aws_security_group" "mhs_route_security_group" {
   vpc_id = local.mhs_vpc_id
 
   tags = {
-    Name = "${var.environment_id}-mhs-route-sg"
-    EnvironmentId = var.environment_id
+    Name = "${var.environment}-mhs-route-sg"
+    Environment = var.environment
+    CreatedBy = var.repo_name
   }
 }
 
@@ -186,8 +188,9 @@ resource "aws_security_group" "mhs_inbound_security_group" {
   vpc_id = local.mhs_vpc_id
 
   tags = {
-    Name = "${var.environment_id}-mhs-inbound-sg"
-    EnvironmentId = var.environment_id
+    Name = "${var.environment}-mhs-inbound-sg"
+    Environment = var.environment
+    CreatedBy = var.repo_name
   }
 }
 
@@ -316,8 +319,9 @@ resource "aws_security_group" "ecr_security_group" {
   }
 
   tags = {
-    Name = "${var.environment_id}-ecr-endpoint-sg"
-    EnvironmentId = var.environment_id
+    Name = "${var.environment}-ecr-endpoint-sg"
+    Environment = var.environment
+    CreatedBy = var.repo_name
   }
 }
 
@@ -341,8 +345,9 @@ resource "aws_security_group" "cloudwatch_security_group" {
   }
 
   tags = {
-    Name = "${var.environment_id}-cloudwatch-endpoint-sg"
-    EnvironmentId = var.environment_id
+    Name = "${var.environment}-cloudwatch-endpoint-sg"
+    Environment = var.environment
+    CreatedBy = var.repo_name
   }
 }
 
@@ -368,8 +373,9 @@ resource "aws_security_group" "sds_cache_security_group" {
   }
 
   tags = {
-    Name = "${var.environment_id}-sds-cache-sg"
-    EnvironmentId = var.environment_id
+    Name = "${var.environment}-sds-cache-sg"
+    Environment = var.environment
+    CreatedBy = var.repo_name
   }
 }
 
@@ -426,8 +432,9 @@ resource "aws_security_group" "alb_outbound_security_group" {
   }
 
   tags = {
-    Name = "${var.environment_id}-alb-outbound-sg"
-    EnvironmentId = var.environment_id
+    Name = "${var.environment}-alb-outbound-sg"
+    Environment = var.environment
+    CreatedBy = var.repo_name
   }
 }
 
@@ -470,7 +477,8 @@ resource "aws_security_group" "alb_route_security_group" {
   }
 
   tags = {
-    Name = "${var.environment_id}-alb-route-sg"
-    EnvironmentId = var.environment_id
+    Name = "${var.environment}-alb-route-sg"
+    Environment = var.environment
+    CreatedBy = var.repo_name
   }
 }

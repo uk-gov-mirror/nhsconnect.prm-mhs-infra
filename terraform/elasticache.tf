@@ -11,8 +11,8 @@
 # (see number_cache_clusters).
 resource "aws_elasticache_replication_group" "elasticache_replication_group" {
   automatic_failover_enabled = true
-  replication_group_id = "${var.environment_id}-rg"
-  replication_group_description = "An ElastiCache cluster for the environment: ${var.environment_id}"
+  replication_group_id = "${var.environment}-rg"
+  replication_group_description = "An ElastiCache cluster for the environment: ${var.environment}"
   node_type = var.elasticache_node_type
   number_cache_clusters = length(data.aws_availability_zones.all.names)
   at_rest_encryption_enabled = true
@@ -26,7 +26,7 @@ resource "aws_elasticache_replication_group" "elasticache_replication_group" {
 
 # The MHS ElastiCache subnet group. Defines the subnets that the ElastiCache cluster should place replicas in.
 resource "aws_elasticache_subnet_group" "elasticache_subnet_group" {
-  name = "${var.environment_id}-elasticache-subnet-group"
-  description = "Subnet group for the ElastiCache cluster used in environment: ${var.environment_id}"
+  name = "${var.environment}-elasticache-subnet-group"
+  description = "Subnet group for the ElastiCache cluster used in environment: ${var.environment}"
   subnet_ids = local.subnet_ids
 }

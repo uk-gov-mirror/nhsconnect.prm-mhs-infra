@@ -21,8 +21,9 @@ resource "aws_s3_bucket" "mhs_access_logs_bucket" {
   }
 
   tags = {
-    Name = "${var.environment_id}-mhs-access-logs-bucket"
-    EnvironmentId = var.environment_id
+    Name = "${var.environment}-mhs-access-logs-bucket"
+    Environment = var.environment
+    CreatedBy = var.repo_name
   }
 }
 

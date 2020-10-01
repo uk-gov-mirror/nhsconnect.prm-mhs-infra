@@ -4,38 +4,42 @@
 
 # The ECS cluster within which all MHS tasks will run
 resource "aws_ecs_cluster" "mhs_cluster" {
-  name = "${var.environment_id}-mhs-cluster"
+  name = "${var.environment}-mhs-cluster"
 
   tags = {
-    Name = "${var.environment_id}-mhs-cluster"
-    EnvironmentId = var.environment_id
+    Name = "${var.environment}-mhs-cluster"
+    Environment = var.environment
+    CreatedBy = var.repo_name
   }
 }
 
 # Cloudwatch log group for MHS outbound to log to
 resource "aws_cloudwatch_log_group" "mhs_outbound_log_group" {
-  name = "/ecs/${var.environment_id}-mhs-outbound"
+  name = "/ecs/${var.environment}-mhs-outbound"
   tags = {
-    Name = "${var.environment_id}-mhs-outbound-log-group"
-    EnvironmentId = var.environment_id
+    Name = "${var.environment}-mhs-outbound-log-group"
+    Environment = var.environment
+    CreatedBy = var.repo_name
   }
 }
 
 # Cloudwatch log group for MHS inbound to log to
 resource "aws_cloudwatch_log_group" "mhs_inbound_log_group" {
-  name = "/ecs/${var.environment_id}-mhs-inbound"
+  name = "/ecs/${var.environment}-mhs-inbound"
   tags = {
-    Name = "${var.environment_id}-mhs-inbound-log-group"
-    EnvironmentId = var.environment_id
+    Name = "${var.environment}-mhs-inbound-log-group"
+    Environment = var.environment
+    CreatedBy = var.repo_name
   }
 }
 
 # Cloudwatch log group for MHS route service to log to
 resource "aws_cloudwatch_log_group" "mhs_route_log_group" {
-  name = "/ecs/${var.environment_id}-mhs-route"
+  name = "/ecs/${var.environment}-mhs-route"
   tags = {
-    Name = "${var.environment_id}-mhs-route-log-group"
-    EnvironmentId = var.environment_id
+    Name = "${var.environment}-mhs-route-log-group"
+    Environment = var.environment
+    CreatedBy = var.repo_name
   }
 }
 
@@ -102,7 +106,7 @@ locals {
 
 # MHS outbound ECS task definition
 resource "aws_ecs_task_definition" "mhs_outbound_task" {
-  family = "${var.environment_id}-mhs-outbound"
+  family = "${var.environment}-mhs-outbound"
   depends_on = [module.dns]
   container_definitions = jsonencode(
   [
@@ -167,8 +171,9 @@ resource "aws_ecs_task_definition" "mhs_outbound_task" {
     "FARGATE"
   ]
   tags = {
-    Name = "${var.environment_id}-mhs-outbound-task"
-    EnvironmentId = var.environment_id
+    Name = "${var.environment}-mhs-outbound-task"
+    Environment = var.environment
+    CreatedBy = var.repo_name
   }
   task_role_arn = local.task_role_arn
   execution_role_arn = local.execution_role_arn
@@ -176,7 +181,7 @@ resource "aws_ecs_task_definition" "mhs_outbound_task" {
 
 # MHS inbound ECS task definition
 resource "aws_ecs_task_definition" "mhs_inbound_task" {
-  family = "${var.environment_id}-mhs-inbound"
+  family = "${var.environment}-mhs-inbound"
   depends_on = [module.dns]
   container_definitions = jsonencode(
   [
@@ -273,8 +278,9 @@ resource "aws_ecs_task_definition" "mhs_inbound_task" {
     "FARGATE"
   ]
   tags = {
-    Name = "${var.environment_id}-mhs-inbound-task"
-    EnvironmentId = var.environment_id
+    Name = "${var.environment}-mhs-inbound-task"
+    Environment = var.environment
+    CreatedBy = var.repo_name
   }
   task_role_arn = local.task_role_arn
   execution_role_arn = local.execution_role_arn
@@ -282,7 +288,7 @@ resource "aws_ecs_task_definition" "mhs_inbound_task" {
 
 # Create an ECS task definition for the MHS route service container image.
 resource "aws_ecs_task_definition" "mhs_route_task" {
-  family = "${var.environment_id}-mhs-route"
+  family = "${var.environment}-mhs-route"
   depends_on = [module.dns]
   container_definitions = jsonencode(
   [
@@ -363,8 +369,9 @@ resource "aws_ecs_task_definition" "mhs_route_task" {
     "FARGATE"
   ]
   tags = {
-    Name = "${var.environment_id}-mhs-route-task"
-    EnvironmentId = var.environment_id
+    Name = "${var.environment}-mhs-route-task"
+    Environment = var.environment
+    CreatedBy = var.repo_name
   }
   task_role_arn = local.task_role_arn
   execution_role_arn = local.execution_role_arn
@@ -374,7 +381,7 @@ resource "aws_ecs_task_definition" "mhs_route_task" {
 # MHS outbound service that runs multiple of the MHS outbound task definition
 # defined above
 resource "aws_ecs_service" "mhs_outbound_service" {
-  name = "${var.environment_id}-mhs-outbound"
+  name = "${var.environment}-mhs-outbound"
   cluster = aws_ecs_cluster.mhs_cluster.id
   deployment_maximum_percent = 200
   deployment_minimum_healthy_percent = 100
@@ -424,7 +431,7 @@ resource "aws_appautoscaling_target" "mhs_outbound_autoscaling_target" {
 # An autoscaling policy for the MHS outbound ECS service that scales services so that each instance handles the desired
 # number of requests per minute.
 resource "aws_appautoscaling_policy" "mhs_outbound_autoscaling_policy" {
-  name = "${var.environment_id}-mhs-outbound-autoscaling-policy"
+  name = "${var.environment}-mhs-outbound-autoscaling-policy"
   policy_type = "TargetTrackingScaling"
   resource_id = aws_appautoscaling_target.mhs_outbound_autoscaling_target.resource_id
   scalable_dimension = aws_appautoscaling_target.mhs_outbound_autoscaling_target.scalable_dimension
@@ -442,7 +449,7 @@ resource "aws_appautoscaling_policy" "mhs_outbound_autoscaling_policy" {
 # MHS inbound service that runs multiple of the MHS outbound task definition
 # defined above
 resource "aws_ecs_service" "mhs_inbound_service" {
-  name = "${var.environment_id}-mhs-inbound"
+  name = "${var.environment}-mhs-inbound"
   cluster = aws_ecs_cluster.mhs_cluster.id
   deployment_maximum_percent = 200
   deployment_minimum_healthy_percent = 100
@@ -494,7 +501,7 @@ resource "aws_appautoscaling_target" "mhs_inbound_autoscaling_target" {
 # An autoscaling policy for the MHS inbound ECS service that scales services so that each instance handles the desired
 # number of requests per minute.
 resource "aws_appautoscaling_policy" "mhs_inbound_autoscaling_policy" {
-  name = "${var.environment_id}-mhs-inbound-autoscaling-policy"
+  name = "${var.environment}-mhs-inbound-autoscaling-policy"
   policy_type = "TargetTrackingScaling"
   resource_id = aws_appautoscaling_target.mhs_inbound_autoscaling_target.resource_id
   scalable_dimension = aws_appautoscaling_target.mhs_inbound_autoscaling_target.scalable_dimension
@@ -511,7 +518,7 @@ resource "aws_appautoscaling_policy" "mhs_inbound_autoscaling_policy" {
 # Create an ECS service that runs a configurable number of instances of the route service container across all of the
 # VPC's subnets. Each container is register with the route service's LB's target group.
 resource "aws_ecs_service" "mhs_route_service" {
-  name = "${var.environment_id}-mhs-route"
+  name = "${var.environment}-mhs-route"
   cluster = aws_ecs_cluster.mhs_cluster.id
   deployment_maximum_percent = 200
   deployment_minimum_healthy_percent = 100
@@ -561,7 +568,7 @@ resource "aws_appautoscaling_target" "mhs_route_autoscaling_target" {
 # An autoscaling policy for the MHS route ECS service that scales services so that each instance handles the desired
 # number of requests per minute.
 resource "aws_appautoscaling_policy" "mhs_route_autoscaling_policy" {
-  name = "${var.environment_id}-mhs-route-autoscaling-policy"
+  name = "${var.environment}-mhs-route-autoscaling-policy"
   policy_type = "TargetTrackingScaling"
   resource_id = aws_appautoscaling_target.mhs_route_autoscaling_target.resource_id
   scalable_dimension = aws_appautoscaling_target.mhs_route_autoscaling_target.scalable_dimension

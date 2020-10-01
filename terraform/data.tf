@@ -13,21 +13,21 @@ data "aws_vpc" "supplier_vpc" {
 }
 
 data "aws_ssm_parameter" "mq-app-username" {
-  name = "/repo/${var.environment_id}/prm-deductions-infra/user-input/mq-app-username"
+  name = "/repo/${var.environment}/prm-deductions-infra/user-input/mq-app-username"
 }
 
 data "aws_ssm_parameter" "mq-app-password" {
-  name = "/repo/${var.environment_id}/prm-deductions-infra/user-input/mq-app-password"
+  name = "/repo/${var.environment}/prm-deductions-infra/user-input/mq-app-password"
 }
 
 data "aws_ssm_parameter" "amqp-endpoint-0" {
-  name = "/repo/${var.environment_id}/prm-deductions-infra/output/amqp-endpoint-0"
+  name = "/repo/${var.environment}/prm-deductions-infra/output/amqp-endpoint-0"
 }
 
 data "aws_ssm_parameter" "amqp-endpoint-1" {
-  name = "/repo/${var.environment_id}/prm-deductions-infra/output/amqp-endpoint-1"
+  name = "/repo/${var.environment}/prm-deductions-infra/output/amqp-endpoint-1"
 }
 
 data "aws_ssm_parameter" "amqp-endpoint-active" {
-  name = "/repo/${var.environment_id}/prm-deductions-infra/output/amqp-endpoint-active"
+  name = "/repo/${var.environment}/prm-deductions-infra/output/amqp-endpoint-active"
 }

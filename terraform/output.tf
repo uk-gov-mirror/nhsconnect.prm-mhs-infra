@@ -19,31 +19,31 @@ variable "deductions_env" {
 }
 
 resource "aws_ssm_parameter" "outbound_url" {
-  name = "/repo/${var.environment_id}/prm-mhs-infra/output/mhs-outbound-url"
+  name = "/repo/${var.environment}/prm-mhs-infra/output/mhs-outbound-url"
   type  = "String"
   value = trimsuffix("https://${aws_route53_record.mhs_outbound_load_balancer_record.name}", ".")
 }
 
 resource "aws_ssm_parameter" "inbound_url" {
-  name = "/repo/${var.environment_id}/prm-mhs-infra/output/mhs-inbound-url"
+  name = "/repo/${var.environment}/prm-mhs-infra/output/mhs-inbound-url"
   type  = "String"
   value = trimsuffix("${aws_route53_record.mhs_inbound_load_balancer_record.name}", ".")
 }
 
 resource "aws_ssm_parameter" "route_url" {
-  name = "/repo/${var.environment_id}/prm-mhs-infra/output/mhs-route-url"
+  name = "/repo/${var.environment}/prm-mhs-infra/output/mhs-route-url"
   type  = "String"
   value = trimsuffix("https://${aws_route53_record.mhs_route_load_balancer_record.name}", ".")
 }
 
 resource "aws_ssm_parameter" "mhs_vpc" {
-  name = "/repo/${var.environment_id}/prm-mhs-infra/output/mhs-vpc-id"
+  name = "/repo/${var.environment}/prm-mhs-infra/output/mhs-vpc-id"
   type  = "String"
   value = local.mhs_vpc_id
 }
 
 resource "aws_ssm_parameter" "dns_servers" {
-  name = "/repo/${var.environment_id}/prm-mhs-infra/output/mhs-dns-servers"
+  name = "/repo/${var.environment}/prm-mhs-infra/output/mhs-dns-servers"
   type  = "String"
   value = join(",", module.dns.dns_ip_addresses)
 }

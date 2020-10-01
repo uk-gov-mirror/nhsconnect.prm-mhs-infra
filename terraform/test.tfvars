@@ -1,5 +1,6 @@
 region                              = "eu-west-2"
-environment_id                      = "test" # just a name identifier
+repo_name                           = "prm-mhs-infra"
+environment                         = "test" # just a name identifier
 recipient_ods_code                  = "B86041"
 nlb_deletion_protection             = true
 mhs_vpc_cidr_block                  = "10.34.0.0/16" # Must not conflict with other networks

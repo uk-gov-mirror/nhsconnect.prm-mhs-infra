@@ -7,7 +7,7 @@ module "gocd" {
     az = data.aws_availability_zones.all.names[0]
     vpc_id = local.mhs_vpc_id
     subnet_id = local.public_subnet_id
-    agent_resources = "${var.environment_id},mhs"
+    agent_resources = "${var.environment},mhs"
     allocate_public_ip = true
     agent_count = 1
 }
@@ -49,8 +49,9 @@ resource "aws_vpc_peering_connection" "gocd_peering_connection" {
   }
 
   tags = {
-    Name = "${var.environment_id}-mhs-gocd-peering-connection"
-    EnvironmentId = var.environment_id
+    Name = "${var.environment}-mhs-gocd-peering-connection"
+    Environment = var.environment
+    CreatedBy = var.repo_name
   }
 }
 

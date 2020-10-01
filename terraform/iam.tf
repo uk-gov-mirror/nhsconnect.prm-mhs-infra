@@ -13,7 +13,7 @@ data "aws_iam_policy_document" "ecs-assume-role-policy" {
 }
 
 resource "aws_iam_role" "mhs" {
-  name               = "mhs-${var.environment_id}"
+  name               = "mhs-${var.environment}"
   assume_role_policy = data.aws_iam_policy_document.ecs-assume-role-policy.json
 }
 
@@ -24,14 +24,14 @@ data "aws_iam_policy_document" "dynamodb-table-access" {
     ]
 
     resources = [
-      "arn:aws:dynamodb:${var.region}:${data.aws_caller_identity.current.account_id}:table/${var.environment_id}-mhs-state",
-      "arn:aws:dynamodb:${var.region}:${data.aws_caller_identity.current.account_id}:table/${var.environment_id}-mhs-sync-async-state"
+      "arn:aws:dynamodb:${var.region}:${data.aws_caller_identity.current.account_id}:table/${var.environment}-mhs-state",
+      "arn:aws:dynamodb:${var.region}:${data.aws_caller_identity.current.account_id}:table/${var.environment}-mhs-sync-async-state"
     ]
   }
 }
 
 resource "aws_iam_policy" "dynamodb-table-access" {
-  name   = "mhs-${var.environment_id}-dynamodb-table-access"
+  name   = "mhs-${var.environment}-dynamodb-table-access"
   policy = data.aws_iam_policy_document.dynamodb-table-access.json
 }
 
@@ -41,7 +41,7 @@ resource "aws_iam_role_policy_attachment" "mhs_dynamo_attach" {
 }
 
 resource "aws_iam_role" "mhs-as" {
-  name               = "mhs-as-${var.environment_id}"
+  name               = "mhs-as-${var.environment}"
   assume_role_policy = data.aws_iam_policy_document.ecs-assume-role-policy.json
 }
 
@@ -60,7 +60,7 @@ data "aws_iam_policy_document" "mhs-ecs-assume-role-policy" {
 }
 
 resource "aws_iam_role" "mhs-ecs" {
-  name               = "mhs-${var.environment_id}-EcsTaskExecutionRole"
+  name               = "mhs-${var.environment}-EcsTaskExecutionRole"
   assume_role_policy = data.aws_iam_policy_document.mhs-ecs-assume-role-policy.json
 }
 
@@ -87,7 +87,7 @@ data "aws_iam_policy_document" "read-secrets" {
 }
 
 resource "aws_iam_policy" "read-secrets" {
-  name   = "mhs-${var.environment_id}-read-secrets"
+  name   = "mhs-${var.environment}-read-secrets"
   policy = data.aws_iam_policy_document.read-secrets.json
 }
 
