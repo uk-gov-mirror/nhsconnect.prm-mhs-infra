@@ -5,7 +5,7 @@ data "aws_caller_identity" "current" {}
 data "aws_availability_zones" "all" {}
 
 data "aws_ssm_parameter" "spine_org_code" {
-  name = "/repo/dev/prm-mhs-infra/user-input/opentest-spine-org-code"
+  name = "/repo/dev/${var.repo_name}/user-input/opentest-spine-org-code"
 }
 
 data "aws_vpc" "supplier_vpc" {
