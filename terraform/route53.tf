@@ -99,4 +99,8 @@ resource "aws_ssm_parameter" "route_dns_name" {
   name = "/repo/${var.environment}/prm-mhs-infra/output/mhs-route-dns-name"
   value = aws_route53_record.mhs_inbound_load_balancer_record.name
   type = "String"
+  tags = {
+    Environment = var.environment
+    CreatedBy = var.repo_name
+  }
 }

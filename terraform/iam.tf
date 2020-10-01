@@ -15,6 +15,10 @@ data "aws_iam_policy_document" "ecs-assume-role-policy" {
 resource "aws_iam_role" "mhs" {
   name               = "mhs-${var.environment}"
   assume_role_policy = data.aws_iam_policy_document.ecs-assume-role-policy.json
+  tags = {
+    Environment = var.environment
+    CreatedBy = var.repo_name
+  }
 }
 
 data "aws_iam_policy_document" "dynamodb-table-access" {
@@ -43,6 +47,11 @@ resource "aws_iam_role_policy_attachment" "mhs_dynamo_attach" {
 resource "aws_iam_role" "mhs-as" {
   name               = "mhs-as-${var.environment}"
   assume_role_policy = data.aws_iam_policy_document.ecs-assume-role-policy.json
+
+  tags = {
+    Environment = var.environment
+    CreatedBy = var.repo_name
+  }
 }
 
 # ECS Task Execution Role for MHS
@@ -62,6 +71,10 @@ data "aws_iam_policy_document" "mhs-ecs-assume-role-policy" {
 resource "aws_iam_role" "mhs-ecs" {
   name               = "mhs-${var.environment}-EcsTaskExecutionRole"
   assume_role_policy = data.aws_iam_policy_document.mhs-ecs-assume-role-policy.json
+  tags = {
+    Environment = var.environment
+    CreatedBy = var.repo_name
+  }
 }
 
 resource "aws_iam_role_policy_attachment" "ssm-readonly-attach" {

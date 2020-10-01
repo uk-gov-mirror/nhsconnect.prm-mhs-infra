@@ -12,6 +12,10 @@ data "aws_iam_policy_document" "instance-assume-role-policy" {
 resource "aws_iam_role" "dns-server" {
   name               = "mhs-${var.environment}-dns-server"
   assume_role_policy = data.aws_iam_policy_document.instance-assume-role-policy.json
+  tags = {
+    Environment = var.environment
+    CreatedBy = var.repo_name
+  }
 }
 
 resource "aws_iam_role_policy_attachment" "ecr_read_attach" {

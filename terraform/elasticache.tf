@@ -22,6 +22,11 @@ resource "aws_elasticache_replication_group" "elasticache_replication_group" {
   security_group_ids = [
     aws_security_group.sds_cache_security_group.id
   ]
+
+  tags = {
+    Environment = var.environment
+    CreatedBy = var.repo_name
+  }
 }
 
 # The MHS ElastiCache subnet group. Defines the subnets that the ElastiCache cluster should place replicas in.
