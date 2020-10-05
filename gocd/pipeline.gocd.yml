@@ -44,6 +44,9 @@ pipelines:
       docker_dns_images:
         pipeline: mhs-dns-images
         stage: test
+      deductions_infra:
+        pipeline: prm-deductions-infra
+        stage: check_dev
     environment_variables:
       NHS_ENVIRONMENT: dev
     stages:
