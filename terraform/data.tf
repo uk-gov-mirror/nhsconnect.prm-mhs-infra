@@ -9,7 +9,11 @@ data "aws_ssm_parameter" "spine_org_code" {
 }
 
 data "aws_vpc" "supplier_vpc" {
-  id = var.supplier_vpc_id
+  id = data.aws_ssm_parameter.deductions-private-vpc.value
+}
+
+data "aws_ssm_parameter" "deductions-private-vpc" {
+  name = "/repo/${var.environment}/output/prm-deductions-infra/private-vpc-id"
 }
 
 data "aws_ssm_parameter" "mq-app-username" {

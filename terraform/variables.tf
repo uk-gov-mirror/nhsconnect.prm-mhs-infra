@@ -75,11 +75,6 @@ variable "mhs_vpc_cidr_block" {
   default = "10.0.0.0/16"
 }
 
-variable "supplier_vpc_id" {
-  type = string
-  description = "VPC id of the supplier system that connects to the MHS"
-}
-
 variable "internal_root_domain" {
   type = string
   description = "Domain name to be used internally to refer to parts of the MHS (subdomains will be created off of this root domain). This domain name should not clash with any domain name on the internet. e.g. internal.somedomainyoucontrol.com"

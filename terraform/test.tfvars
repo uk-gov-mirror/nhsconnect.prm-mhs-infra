@@ -13,7 +13,6 @@ mhs_route_service_maximum_instance_count = 2
 mhs_route_service_minimum_instance_count = 1
 mhs_log_level                       = "DEBUG"
 elasticache_node_type               = "cache.t3.micro"
-supplier_vpc_id                     = "vpc-085feb2f69e5afdac" # That should be deductions-private. TODO: from SSM
 
 # From https://gpitbjss.atlassian.net/wiki/spaces/RTDel/pages/1606615966/Deploying+the+Exemplar+Architecture
 mhs_resynchroniser_max_retries="20"
