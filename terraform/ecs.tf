@@ -410,11 +410,6 @@ resource "aws_ecs_service" "mhs_outbound_service" {
     aws_lb.outbound_alb
   ]
 
-  tags = {
-    Environment = var.environment
-    CreatedBy = var.repo_name
-  }
-
   # Preserve the autoscaled instance count when this service is updated
   lifecycle {
     ignore_changes = [
@@ -485,11 +480,6 @@ resource "aws_ecs_service" "mhs_inbound_service" {
     aws_lb.inbound_nlb
   ]
 
-  tags = {
-    Environment = var.environment
-    CreatedBy = var.repo_name
-  }
-
   # Preserve the autoscaled instance count when this service is updated
   lifecycle {
     ignore_changes = [
@@ -556,11 +546,6 @@ resource "aws_ecs_service" "mhs_route_service" {
   depends_on = [
     aws_lb.route_alb
   ]
-
-  tags = {
-    Environment = var.environment
-    CreatedBy = var.repo_name
-  }
 
   # Preserve the autoscaled instance count when this service is updated
   lifecycle {
