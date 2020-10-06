@@ -9,6 +9,7 @@ locals {
      [join(",", aws_vpc.mhs_vpc.*.main_route_table_id)] : [join(",", data.aws_vpc.mhs_vpc.*.main_route_table_id)])
 }
 
+
 # The MHS VPC that contains the running MHS
 resource "aws_vpc" "mhs_vpc" {
   count =  var.use_existing_vpc == "" ? 1 : 0

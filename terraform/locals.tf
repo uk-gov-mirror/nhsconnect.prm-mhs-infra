@@ -4,10 +4,10 @@ locals {
   ecr_address = "${local.account_id}.dkr.ecr.${var.region}.amazonaws.com" # created in prm-deductions-base-infra
 
   public_subnet_cidr = join(",", var.use_opentest == "true" ?
-    [var.vpn_subnet] : [join(",", data.aws_subnet.public_subnet.*.cidr_block)])
+    [var.vpn_subnet] : [join(",", aws_subnet.public_subnet.*.cidr_block)])
   public_subnet_id = join(",", var.use_opentest == "true" ?
-    [module.opentest.subnet_id] : [join(",", data.aws_subnet.public_subnet.*.id)])
-  public_subnet_route_table = data.aws_route_table.public_subnet.id
+    [module.opentest.subnet_id] : [join(",", aws_subnet.public_subnet.*.id)])
+  public_subnet_route_table = var.use_opentest == "true" ? module.opentest.public_route_table_id : join(",", aws_route_table.public.*.id)
 
   inbound_queue_username_arn=data.aws_ssm_parameter.mq-app-username.arn
   inbound_queue_password_arn=data.aws_ssm_parameter.mq-app-password.arn
@@ -24,14 +24,4 @@ locals {
   task_role_arn = aws_iam_role.mhs.arn
   task_scaling_role_arn = aws_iam_role.mhs-as.arn
   execution_role_arn = aws_iam_role.mhs-ecs.arn
-}
-
-data "aws_subnet" "public_subnet" {
-  count = var.use_existing_vpc == "" ? 0 : 1
-  vpc_id = local.mhs_vpc_id
-  cidr_block = cidrsubnet(local.mhs_vpc_cidr_block, var.cidr_newbits, 3) # The 4th subnet is public
-}
-
-data "aws_route_table" "public_subnet" {
-  subnet_id = local.public_subnet_id
 }
