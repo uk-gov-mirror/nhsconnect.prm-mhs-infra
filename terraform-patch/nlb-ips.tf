@@ -11,7 +11,7 @@ locals {
 data "aws_caller_identity" "current" {}
 
 data "aws_ssm_parameter" "mhs_vpc" {
-  name = "/repo/${var.environment}/output/${var.repo_name}/mhs-vpc-id"
+  name = "/repo/${var.environment}/output/prm-mhs-infra/mhs-vpc-id"
 }
 
 data "aws_network_interfaces" "this" {
