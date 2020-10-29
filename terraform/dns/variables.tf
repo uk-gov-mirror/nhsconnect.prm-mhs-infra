@@ -1,4 +1,5 @@
 variable "dns_global_forward_server" {}
+variable "dns_forward_zone" {}
 variable "dns_hscn_forward_server_1" {}
 variable "dns_hscn_forward_server_2" {}
 variable "ecr_address" {}

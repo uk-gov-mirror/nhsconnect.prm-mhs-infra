@@ -36,6 +36,6 @@ spineroutelookup_service_sds_url    = "ldap://192.168.128.11:389" # It seems so 
 spineroutelookup_service_search_base = "ou=services,o=nhs"
 spineroutelookup_service_disable_sds_tls = "True" # Makes sense for opentest
 
-# OpenTest does not have dedicated DNSes, HSCN is not connected. Therefore we use public, internet-wide DNSes
-dns_hscn_forward_server_1 = "1.0.0.1"
-dns_hscn_forward_server_2 = "1.1.1.1"
+dns_forward_zone = "opentest.hscic.gov.uk"
+dns_hscn_forward_server_1 = "192.168.128.30"
+dns_hscn_forward_server_2 = "192.168.128.30"

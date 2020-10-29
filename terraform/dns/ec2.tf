@@ -1,6 +1,7 @@
 locals {
   dns_count = 2
   dns_global_forward_server  = var.dns_global_forward_server
+  dns_forward_zone           = var.dns_forward_zone
   dns_hscn_forward_server_1  = var.dns_hscn_forward_server_1
   dns_hscn_forward_server_2  = var.dns_hscn_forward_server_2
   dns_docker_image_url       = "${var.ecr_address}/mhs-unbound-dns:${var.unbound_image_version}"
@@ -30,6 +31,7 @@ data "template_file" "userdata" {
 
   vars = {
     GLOBAL_FORWARD_SERVER = local.dns_global_forward_server
+    FORWARD_ZONE_NAME      = local.dns_forward_zone
     HSCN_FORWARD_SERVER_1 = local.dns_hscn_forward_server_1
     HSCN_FORWARD_SERVER_2 = local.dns_hscn_forward_server_2
     DOCKER_IMAGE_URL      = local.dns_docker_image_url

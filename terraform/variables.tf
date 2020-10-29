@@ -21,6 +21,7 @@ variable "inbound_raw_queue_name" {
   default = "raw-inbound"
 }
 
+variable "dns_forward_zone" {}
 variable "dns_hscn_forward_server_1" {}
 variable "dns_hscn_forward_server_2" {}
 variable "unbound_image_version" {}
