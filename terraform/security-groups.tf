@@ -219,6 +219,18 @@ resource "aws_security_group_rule" "mhs_inbound_security_group_ingress_test_rule
   description = "Allow HTTPS inbound requests from testing host"
 }
 
+resource "aws_security_group_rule" "mhs_inbound_security_group_ingress_http_test_rule" {
+  security_group_id = aws_security_group.mhs_inbound_security_group.id
+  type = "ingress"
+  from_port = 80
+  to_port = 80
+  protocol = "tcp"
+  cidr_blocks = [
+    var.testing_subnet
+  ]
+  description = "Allow HTTP inbound requests from testing host"
+}
+
 # Ingress rule to allow healthcheck requests from the MHS inbound load balancer
 resource "aws_security_group_rule" "mhs_inbound_security_group_healthcheck_ingress_rule" {
   security_group_id = aws_security_group.mhs_inbound_security_group.id

@@ -469,11 +469,15 @@ resource "aws_ecs_service" "mhs_inbound_service" {
   load_balancer {
     # In the MHS inbound task definition, we define only 1 container, and for that container, we expose 2 ports.
     # The first of these ports is 443, the port that we want to expose as it handles inbound requests from Spine.
-    # The other port is for doing healthchecks, only the load balancer will be making requests to that port.
-    # That is why in these 2 lines below we do "[0]" to reference that one container and the first port definition.
     container_name = jsondecode(aws_ecs_task_definition.mhs_inbound_task.container_definitions)[0].name
     container_port = jsondecode(aws_ecs_task_definition.mhs_inbound_task.container_definitions)[0].portMappings[0].hostPort
     target_group_arn = aws_lb_target_group.inbound_nlb_target_group.arn
+  }
+
+  load_balancer {
+    container_name = jsondecode(aws_ecs_task_definition.mhs_inbound_task.container_definitions)[0].name
+    container_port = 80
+    target_group_arn = aws_lb_target_group.inbound_http_nlb_target_group.arn
   }
 
   depends_on = [

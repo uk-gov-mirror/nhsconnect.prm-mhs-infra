@@ -213,13 +213,36 @@ resource "aws_lb_target_group" "inbound_nlb_target_group" {
   }
 }
 
+# Target group for the network load balancer for MHS inbound
+# The MHS inbound ECS service registers it's tasks here.
+resource "aws_lb_target_group" "inbound_http_nlb_target_group" {
+  name = "${var.environment}-mhs-inbound-http"
+  port = 80
+  protocol = "TCP"
+  target_type = "ip"
+  vpc_id = local.mhs_vpc_id
+  deregistration_delay = var.deregistration_delay
+
+  health_check {
+    protocol = "HTTP"
+    port = 80
+    path = "/healthcheck"
+  }
+
+  tags = {
+    Name = "${var.environment}-mhs-inbound-http-nlb-target-group"
+    Environment = var.environment
+    CreatedBy = var.repo_name
+  }
+}
+
 # Terraform output variable of the MHS inbound load balancer's target group ARN
 output "inbound_lb_target_group_arn" {
   value = aws_lb_target_group.inbound_nlb_target_group.arn
   description = "The ARN of the MHS inbound service load balancers's target group."
 }
 
-# Listener for MHS inbound load balancer that forwards requests to the correct target group
+# HTTPS Listener for MHS inbound load balancer that forwards requests to the correct target group
 resource "aws_lb_listener" "inbound_nlb_listener" {
   load_balancer_arn = aws_lb.inbound_nlb.arn
   port = 443
@@ -228,5 +251,17 @@ resource "aws_lb_listener" "inbound_nlb_listener" {
   default_action {
     type = "forward"
     target_group_arn = aws_lb_target_group.inbound_nlb_target_group.arn
+  }
+}
+
+# HTTP Listener for MHS inbound load balancer that forwards requests to the correct target group
+resource "aws_lb_listener" "inbound_http_nlb_listener" {
+  load_balancer_arn = aws_lb.inbound_nlb.arn
+  port = 80
+  protocol = "TCP"
+
+  default_action {
+    type = "forward"
+    target_group_arn = aws_lb_target_group.inbound_http_nlb_target_group.arn
   }
 }
