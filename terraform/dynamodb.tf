@@ -1,16 +1,6 @@
-#########################
-# DynamoDB tables
-#
-# Note that AWS by default encrypts DynamoDB tables at rest using an
-# AWS-owned customer master key. This can be changed later to an
-# AWS-managed customer master key.
-# See https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/EncryptionAtRest.html
-# for more details.
-#########################
-
 # The MHS DynamoDB state table, for storing state for each message handled
 resource "aws_dynamodb_table" "mhs_state_table" {
-  name = "${var.environment}-mhs-state"
+  name = "${var.environment}-${var.cluster_name}-mhs-state"
   hash_key = "key"
   read_capacity = var.mhs_state_table_read_capacity
   write_capacity = var.mhs_state_table_write_capacity
@@ -21,7 +11,7 @@ resource "aws_dynamodb_table" "mhs_state_table" {
   }
 
   tags = {
-    Name = "${var.environment}-mhs-state-table"
+    Name = "${var.environment}-${var.cluster_name}-mhs-state-table"
     Environment = var.environment
     CreatedBy = var.repo_name
   }
@@ -29,7 +19,7 @@ resource "aws_dynamodb_table" "mhs_state_table" {
 
 # The MHS DynamoDB sync-async table, used as a queue for the sync-async workflow
 resource "aws_dynamodb_table" "mhs_sync_async_table" {
-  name = "${var.environment}-mhs-sync-async-state"
+  name = "${var.environment}-${var.cluster_name}-mhs-sync-async-state"
   hash_key = "key"
   read_capacity = var.mhs_sync_async_table_read_capacity
   write_capacity = var.mhs_sync_async_table_write_capacity
@@ -40,20 +30,8 @@ resource "aws_dynamodb_table" "mhs_sync_async_table" {
   }
 
   tags = {
-    Name = "${var.environment}-mhs-sync-async-table"
+    Name = "${var.environment}-${var.cluster_name}-mhs-sync-async-table"
     Environment = var.environment
     CreatedBy = var.repo_name
   }
-}
-
-# Terraform output variable of the DynamoDB table used to store the MHS state
-output "mhs_state_table_name" {
-  value = aws_dynamodb_table.mhs_state_table.name
-  description = "The name of the DynamoDB table used to store the MHS state"
-}
-
-# Terraform output variable of the DynamoDB table used to store the MHS inbound/outbound communication state
-output "mhs_sync_async_table_name" {
-  value = aws_dynamodb_table.mhs_sync_async_table.name
-  description = "The name of the DynamoDB table used to store the MHS inbound/outbound communication state"
 }
