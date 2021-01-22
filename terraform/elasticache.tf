@@ -11,7 +11,7 @@ resource "aws_elasticache_replication_group" "elasticache_replication_group" {
   port = 6379
   subnet_group_name = aws_elasticache_subnet_group.elasticache_subnet_group.name
   security_group_ids = [
-    aws_security_group.sds_cache_security_group.id
+    aws_security_group.sds_cache.id
   ]
 
   tags = {
@@ -28,7 +28,7 @@ resource "aws_elasticache_subnet_group" "elasticache_subnet_group" {
 }
 
 # SDS cache security group
-resource "aws_security_group" "sds_cache_security_group" {
+resource "aws_security_group" "sds_cache" {
   name = "${var.environment}-${var.cluster_name}-elasticache-subnet-group"
   description = "The security group used to control traffic for the SDS cache endpoint."
   vpc_id = local.mhs_vpc_id
