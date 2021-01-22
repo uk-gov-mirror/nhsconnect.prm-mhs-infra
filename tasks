@@ -53,33 +53,6 @@ function check_env {
   fi
 }
 
-function generate_ssh_key {
-  secret_id="/repo/dev/user-input/mhs-opentest-id-rsa"
-  ssh_directory=terraform/ssh
-  mkdir -p ${ssh_directory}/
-  if [[ ! -f "${ssh_directory}/id_rsa" ]]; then
-    #TODO check aws authentication
-    set +e
-    id_rsa=$(aws ssm get-parameter --with-decryption --region $AWS_REGION --name $secret_id | jq -r ".Parameter.Value")
-    if [[ $? == 0 ]]; then
-      echo "$id_rsa" > ${ssh_directory}/id_rsa
-    else
-      set -e
-      ssh-keygen -f "${ssh_directory}/id_rsa" -q -N ""
-    fi
-    set -e
-  fi
-  chmod 0600 ${ssh_directory}/id_rsa
-  ssh-keygen -y -f "${ssh_directory}/id_rsa" > "${ssh_directory}/id_rsa.pub"
-  aws ssm put-parameter \
-   --region $AWS_REGION \
-   --name $secret_id \
-   --type SecureString \
-   --overwrite \
-   --value "`cat ${ssh_directory}/id_rsa`"
-}
-
-
 function generate_csr {
   keys_file_name="$1"
   # If you intend to secure the URL https://www.yourdomain.com, then your CSR’s common name must be www.yourdomain.com
@@ -147,20 +120,11 @@ function get_aws_value {
 
 command="$1"
 case "${command}" in
-  _ssh_key)
-      check_env
-      generate_ssh_key
-      ;;
-  ssh_key)
-      dojo "./tasks _ssh_key"
-      ;;
   tf)
       check_env
-      ./tasks ssh_key
       dojo "bash"
       ;;
   _tf_plan)
-      ./tasks _ssh_key
       tf_plan "$2"
       ;;
   tf_plan)
@@ -172,7 +136,6 @@ case "${command}" in
       ;;
   tf_apply)
       check_env
-      ./tasks ssh_key
       dojo "./tasks _tf_apply"
       ;;
   _nlb_ips)
