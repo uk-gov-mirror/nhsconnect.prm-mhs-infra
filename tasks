@@ -19,19 +19,25 @@ fi
 
 function tf_plan {
   operation=$1
+  cluster_name=$2
 
   if [ -z "${DNS_IMAGE_TAG}" ]; then
     echo "DNS_IMAGE_TAG must be set"
     exit 3
   fi
 
+  if [[ $cluster_name != "repo" ]] && [[ $cluster_name != "test_harness" ]]; then
+    echo "cluster_repo must be set to either repo or test_harness"
+    exit 3
+  fi
+
   cd terraform/
-  terraform init -reconfigure -backend-config key=${NHS_SERVICE}-${NHS_ENVIRONMENT}/terraform.tfstate
+  terraform init -reconfigure -backend-config key=${NHS_SERVICE}-${NHS_ENVIRONMENT}-${cluster_name}/terraform.tfstate
   terraform get # modules
   if [[ "${operation}" == "create" ]]; then
-    terraform plan -var build_id=$MHS_IMAGE_TAG -var-file=${NHS_ENVIRONMENT}.tfvars -var-file=${NHS_ENVIRONMENT}_${CLUSTER_NAME}.tfvars -out="nhs_deployment.tfplan"
+    terraform plan -var build_id=$MHS_IMAGE_TAG -var-file=${NHS_ENVIRONMENT}.tfvars -var-file=${NHS_ENVIRONMENT}_${cluster_name}.tfvars -out="${NHS_ENVIRONMENT}.tfplan"
   elif [[ "${operation}" == "destroy" ]]; then
-    terraform plan -var build_id=$MHS_IMAGE_TAG -var-file=${NHS_ENVIRONMENT}.tfvars -var-file=${NHS_ENVIRONMENT}_${CLUSTER_NAME}.tfvars -out="nhs_deployment.tfplan" -destroy
+    terraform plan -var build_id=$MHS_IMAGE_TAG -var-file=${NHS_ENVIRONMENT}.tfvars -var-file=${NHS_ENVIRONMENT}_${cluster_name}.tfvars -out="${NHS_ENVIRONMENT}.tfplan" -destroy
   else
     echo "Unknown operation (should be create or destroy), got: ${operation}"
     exit 1
@@ -42,7 +48,7 @@ function tf_apply {
   cd terraform/
   terraform init -backend-config key=${NHS_SERVICE}-${NHS_ENVIRONMENT}/terraform.tfstate
   terraform get # modules
-  terraform apply nhs_deployment.tfplan
+  terraform apply ${NHS_ENVIRONMENT}.tfplan
   terraform output -json > tf-out.json
 }
 
@@ -124,14 +130,24 @@ case "${command}" in
       check_env
       dojo "bash"
       ;;
-  _tf_plan)
-      tf_plan "$2"
-      ;;
-  tf_plan)
+  _tf_plan_repo)
       check_env
-      dojo "./tasks _tf_plan $2"
+      tf_plan "$2" repo
+      ;;
+  _tf_plan_test_harness)
+      check_env
+      tf_plan "$2" test_harness
+      ;;
+  tf_plan_repo)
+      check_env
+      dojo "./tasks _tf_plan_repo $2 repo"
+      ;;
+  tf_plan_test_harness)
+      check_env
+      dojo "./tasks _tf_plan_test_harness $2 test_harness"
       ;;
   _tf_apply)
+      check_env
       tf_apply
       ;;
   tf_apply)
