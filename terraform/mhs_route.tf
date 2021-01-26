@@ -154,58 +154,57 @@ resource "aws_security_group" "mhs_route" {
     Environment = var.environment
     CreatedBy = var.repo_name
   }
-}
 
-resource "aws_security_group_rule" "mhs_route_egress_to_opentest" {
-  type = "egress"
-  from_port = 389
-  to_port = 389
-  protocol = "tcp"
-  security_group_id = aws_security_group.mhs_route.id
-  cidr_blocks = [var.opentest_cidr]
-  description = "MHS route egress to opentest, including SDS and spine"
-}
+  egress {
+    from_port = 389
+    to_port = 389
+    protocol = "tcp"
+    cidr_blocks = [var.opentest_cidr]
+    description = "MHS route egress to opentest, including SDS and spine"
+  }
 
-resource "aws_security_group_rule" "mhs_route_egress_to_dns" {
-  type = "egress"
-  from_port = 53
-  to_port = 53
-  protocol = "udp"
-  security_group_id = aws_security_group.mhs_route.id
-  cidr_blocks = [local.mhs_vpc_cidr_block]
-  description = "MHS route egress to DNS"
-}
+  egress {
+    from_port = 53
+    to_port = 53
+    protocol = "udp"
+    cidr_blocks = [local.mhs_vpc_cidr_block]
+    description = "MHS route egress to DNS"
+  }
 
-resource "aws_security_group_rule" "mhs_route_egress_to_dynamodb" {
-  type = "egress"
-  from_port = 443
-  to_port = 443
-  protocol = "tcp"
-  security_group_id = aws_security_group.mhs_route.id
-  prefix_list_ids = [
-    local.mhs_dynamodb_vpc_endpoint_prefix_list_id,
-    local.mhs_s3_vpc_endpoint_prefix_list_id
-  ]
-}
+  egress {
+    from_port = 443
+    to_port = 443
+    protocol = "tcp"
+    prefix_list_ids = [
+      local.mhs_dynamodb_vpc_endpoint_prefix_list_id,
+      local.mhs_s3_vpc_endpoint_prefix_list_id
+    ]
+    description = "MHS route egress to AWS VPC endpoints for dynamodb and s3 (gateway type)"
+  }
 
-resource "aws_security_group_rule" "mhs_route_ingress_from_mhs_vpc" {
-  type = "ingress"
-  from_port = 80
-  to_port = 80
-  protocol = "tcp"
-  security_group_id = aws_security_group.mhs_route.id
-  cidr_blocks = [local.mhs_vpc_cidr_block]
-  description = "MHS route ingress from MHS VPC"
-}
+  egress {
+    from_port = 6379
+    to_port = 6379
+    protocol = "tcp"
+    security_groups = [aws_security_group.sds_cache.id]
+    description = "MHS route egress to elasticache"
+  }
 
-resource "aws_security_group_rule" "mhs_route_egress_to_elasticache" {
-  type = "egress"
-  from_port = 6379
-  to_port = 6379
-  protocol = "tcp"
-  security_group_id = aws_security_group.mhs_route.id
-  source_security_group_id = aws_security_group.sds_cache.id
-  description = "MHS route egress to elasticache"
+  egress {
+    from_port = 443
+    to_port = 443
+    protocol = "tcp"
+    cidr_blocks = [local.mhs_vpc_cidr_block]
+    description = "MHS route egress to MHS VPC"
+  }
+
+  ingress {
+    from_port = 80
+    to_port = 80
+    protocol = "tcp"
+    cidr_blocks = [local.mhs_vpc_cidr_block]
+    description = "MHS route ingress from MHS VPC"
+  }
 }
 
 resource "aws_security_group_rule" "elasticache_ingress_from_mhs_route" {
@@ -216,16 +215,6 @@ resource "aws_security_group_rule" "elasticache_ingress_from_mhs_route" {
   security_group_id = aws_security_group.sds_cache.id
   source_security_group_id = aws_security_group.mhs_route.id
   description = "Elasticache ingress from MHS route"
-}
-
-resource "aws_security_group_rule" "mhs_route_egress_to_mhs_vpc" {
-  type = "egress"
-  from_port = 443
-  to_port = 443
-  protocol = "tcp"
-  security_group_id = aws_security_group.mhs_route.id
-  cidr_blocks = [local.mhs_vpc_cidr_block]
-  description = "MHS route egress to MHS VPC"
 }
 
 resource "aws_lb" "route_alb" {
