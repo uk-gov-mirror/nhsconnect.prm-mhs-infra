@@ -50,6 +50,12 @@ data "aws_vpc_endpoint" "mhs-s3" {
   service_name = "com.amazonaws.${var.region}.s3"
 }
 
+data "aws_route53_zone" "mhs-route" {
+  name = var.cluster_domain_name
+  private_zone = true
+  vpc_id = local.mhs_vpc_id
+}
+
 locals {
   account_id = data.aws_caller_identity.current.account_id
   ecr_address = "${local.account_id}.dkr.ecr.${var.region}.amazonaws.com" # created in prm-deductions-base-infra
@@ -61,6 +67,8 @@ locals {
   dns_ip_address_1 = data.aws_ssm_parameter.dns_ip_address_1.value
   mhs_dynamodb_vpc_endpoint_prefix_list_id = data.aws_vpc_endpoint.mhs-dynamodb.prefix_list_id
   mhs_s3_vpc_endpoint_prefix_list_id = data.aws_vpc_endpoint.mhs-s3.prefix_list_id
+  mhs_route_route53_zone_id = data.aws_route53_zone.mhs-route.id
+  mhs_route_route53_zone_name  = data.aws_route53_zone.mhs-route.name
 
   # MHS secrets to connect with spine
   party_key_arn=data.aws_ssm_parameter.party-key.arn

@@ -310,3 +310,15 @@ resource "aws_security_group" "route_alb" {
   }
 }
 
+resource "aws_route53_record" "mhs_route_load_balancer_record" {
+  zone_id = local.mhs_route_route53_zone_id
+  name = "mhs-route-${var.environment}.${local.mhs_route_route53_zone_name}"
+  type = "A"
+
+  alias {
+    name = aws_lb.route_alb.dns_name
+    zone_id = aws_lb.route_alb.zone_id
+    evaluate_target_health = false
+  }
+}
+

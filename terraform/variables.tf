@@ -56,3 +56,5 @@ variable "route_alb_certificate_arn" {
 variable "opentest_cidr" {
   default = "192.168.128.0/24"
 }
+
+variable "cluster_domain_name" {}
