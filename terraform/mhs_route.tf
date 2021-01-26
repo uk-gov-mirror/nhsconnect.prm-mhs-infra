@@ -106,24 +106,218 @@ resource "aws_ecs_task_definition" "mhs_route_task" {
   execution_role_arn = local.execution_role_arn
 }
 
+resource "aws_ecs_service" "mhs_route_service" {
+  name = "${var.environment}-${var.cluster_name}-mhs-route"
+  cluster = aws_ecs_cluster.mhs_route_cluster.id
+  deployment_maximum_percent = 200
+  deployment_minimum_healthy_percent = 100
+  desired_count = var.mhs_route_service_minimum_instance_count
+  launch_type = "FARGATE"
+  scheduling_strategy = "REPLICA"
+  task_definition = aws_ecs_task_definition.mhs_route_task.arn
+
+  network_configuration {
+    assign_public_ip = false
+    security_groups = [
+      aws_security_group.mhs_route.id
+    ]
+    subnets = local.mhs_private_subnet_ids
+  }
+
+  load_balancer {
+    # In the MHS route task definition, we define only 1 container, and for that container, we expose only 1 port
+    # That is why in these 2 lines below we do "[0]" to reference that one container and port definition.
+    container_name = jsondecode(aws_ecs_task_definition.mhs_route_task.container_definitions)[0].name
+    container_port = 80
+    target_group_arn = aws_lb_target_group.route_alb_target_group.arn
+  }
+
+  depends_on = [
+    aws_lb.route_alb
+  ]
+
+  # Preserve the autoscaled instance count when this service is updated
+  lifecycle {
+    ignore_changes = [
+      desired_count
+    ]
+  }
+}
+
 resource "aws_security_group" "mhs_route" {
   name = "${var.environment}-${var.cluster_name}-mhs-route"
   description = "The security group used to control traffic for the MHS Routing component."
   vpc_id = local.mhs_vpc_id
 
   tags = {
-    Name = "${var.environment}-mhs-route-sg"
+    Name = "${var.environment}-${var.cluster_name}-mhs-route-sg"
     Environment = var.environment
     CreatedBy = var.repo_name
   }
 }
 
-resource "aws_security_group_rule" "mhs_inbound_access_to_elasticache" {
-  type              = "ingress"
+resource "aws_security_group_rule" "mhs_route_egress_to_opentest" {
+  type = "egress"
+  from_port = 389
+  to_port = 389
+  protocol = "tcp"
+  security_group_id = aws_security_group.mhs_route.id
+  cidr_blocks = [var.opentest_cidr]
+  description = "MHS route egress to opentest, including SDS and spine"
+}
+
+resource "aws_security_group_rule" "mhs_route_egress_to_dns" {
+  type = "egress"
+  from_port = 53
+  to_port = 53
+  protocol = "udp"
+  security_group_id = aws_security_group.mhs_route.id
+  cidr_blocks = [local.mhs_vpc_cidr_block]
+  description = "MHS route egress to DNS"
+}
+
+resource "aws_security_group_rule" "mhs_route_egress_to_dynamodb" {
+  type = "egress"
+  from_port = 443
+  to_port = 443
+  protocol = "tcp"
+  security_group_id = aws_security_group.mhs_route.id
+  prefix_list_ids = [
+    local.mhs_dynamodb_vpc_endpoint_prefix_list_id,
+    local.mhs_s3_vpc_endpoint_prefix_list_id
+  ]
+}
+
+resource "aws_security_group_rule" "mhs_route_ingress_from_mhs_vpc" {
+  type = "ingress"
+  from_port = 80
+  to_port = 80
+  protocol = "tcp"
+  security_group_id = aws_security_group.mhs_route.id
+  cidr_blocks = [local.mhs_vpc_cidr_block]
+  description = "MHS route ingress from MHS VPC"
+}
+
+resource "aws_security_group_rule" "mhs_route_egress_to_elasticache" {
+  type = "egress"
   from_port = 6379
   to_port = 6379
-  protocol          = "tcp"
-  source_security_group_id = aws_security_group.mhs_route.id
-  security_group_id = aws_security_group.sds_cache.id
-  description = "Allow Redis requests from MHS route task"
+  protocol = "tcp"
+  security_group_id = aws_security_group.mhs_route.id
+  source_security_group_id = aws_security_group.sds_cache.id
+  description = "MHS route egress to elasticache"
 }
+
+resource "aws_security_group_rule" "elasticache_ingress_from_mhs_route" {
+  type = "ingress"
+  from_port = 6379
+  to_port = 6379
+  protocol = "tcp"
+  security_group_id = aws_security_group.sds_cache.id
+  source_security_group_id = aws_security_group.mhs_route.id
+  description = "Elasticache ingress from MHS route"
+}
+
+resource "aws_security_group_rule" "mhs_route_egress_to_mhs_vpc" {
+  type = "egress"
+  from_port = 443
+  to_port = 443
+  protocol = "tcp"
+  security_group_id = aws_security_group.mhs_route.id
+  cidr_blocks = [local.mhs_vpc_cidr_block]
+  description = "MHS route egress to MHS VPC"
+}
+
+resource "aws_lb" "route_alb" {
+  name = "${var.environment}-${var.cluster_name}-mhs-route-alb"
+  internal = true
+  load_balancer_type = "application"
+  subnets = local.mhs_private_subnet_ids
+  security_groups = [
+    aws_security_group.route_alb.id
+  ]
+
+  tags = {
+    Name = "${var.environment}-${var.cluster_name}-mhs-route-alb"
+    Environment = var.environment
+    CreatedBy = var.repo_name
+  }
+}
+
+# Target group for the application load balancer for MHS route service
+# The MHS route ECS service registers it's tasks here.
+resource "aws_lb_target_group" "route_alb_target_group" {
+  name = "${var.environment}-${var.cluster_name}-mhs-route"
+  port = 80
+  protocol = "HTTP"
+  target_type = "ip"
+  vpc_id = local.mhs_vpc_id
+  deregistration_delay = var.deregistration_delay
+
+  health_check {
+    path = "/healthcheck"
+    matcher = "200"
+  }
+
+  tags = {
+    Name = "${var.environment}-mhs-route-alb-target-group"
+    Environment = var.environment
+    CreatedBy = var.repo_name
+  }
+}
+
+# Listener for MHS route service's load balancer that forwards requests to the correct target group
+resource "aws_lb_listener" "route_alb_listener" {
+  load_balancer_arn = aws_lb.route_alb.arn
+  port = 443
+  protocol = "HTTPS"
+  ssl_policy = "ELBSecurityPolicy-TLS-1-2-2017-01"
+  certificate_arn = var.route_alb_certificate_arn
+
+  default_action {
+    type = "forward"
+    target_group_arn = aws_lb_target_group.route_alb_target_group.arn
+  }
+}
+
+# MHS route load balancer security group
+resource "aws_security_group" "route_alb" {
+  name = "${var.environment}-${var.cluster_name}-mhs-route-alb"
+  description = "The security group used to control traffic for the MHS routing component Application Load Balancer."
+  vpc_id = local.mhs_vpc_id
+
+
+  # Allow inbound traffic from MHS VPC
+  ingress {
+    from_port = 443
+    to_port = 443
+    protocol = "tcp"
+    cidr_blocks = [local.mhs_vpc_cidr_block]
+    description = "ALB route ingress from MHS VPC"
+  }
+
+  # TODO: Restrict the ingress cidr block to deductions private
+  # Allow inbound traffic from MHS clients
+  ingress {
+    from_port = 443
+    to_port = 443
+    protocol = "tcp"
+    cidr_blocks = [var.allowed_mhs_clients]
+    description = "ALB route ingress from MHS clients"
+  }
+
+  egress {
+    from_port = 80
+    to_port = 80
+    cidr_blocks = [local.mhs_vpc_cidr_block]
+    protocol = "tcp"
+    description = "ALB route egress to MHS VPC"
+  }
+
+  tags = {
+    Name = "${var.environment}-alb-route-sg"
+    Environment = var.environment
+    CreatedBy = var.repo_name
+  }
+}
+

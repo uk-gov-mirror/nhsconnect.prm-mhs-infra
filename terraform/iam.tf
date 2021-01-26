@@ -18,7 +18,7 @@ data "aws_iam_policy_document" "mhs-ecs-assume-role-policy" {
 }
 
 resource "aws_iam_role" "mhs-ecs" {
-  name               = "mhs-${var.environment}-EcsTaskExecutionRole"
+  name               = "mhs-${var.environment}-${var.cluster_name}-EcsTaskExecutionRole"
   assume_role_policy = data.aws_iam_policy_document.mhs-ecs-assume-role-policy.json
   tags = {
     Environment = var.environment
@@ -49,7 +49,7 @@ data "aws_iam_policy_document" "read-secrets" {
 }
 
 resource "aws_iam_policy" "read-secrets" {
-  name   = "mhs-${var.environment}-read-secrets"
+  name   = "mhs-${var.environment}-${var.cluster_name}-read-secrets"
   policy = data.aws_iam_policy_document.read-secrets.json
 }
 
@@ -73,7 +73,7 @@ data "aws_iam_policy_document" "ecs-assume-role-policy" {
 }
 
 resource "aws_iam_role" "mhs" {
-  name               = "mhs-${var.environment}"
+  name               = "mhs-${var.environment}-${var.cluster_name}"
   assume_role_policy = data.aws_iam_policy_document.ecs-assume-role-policy.json
   tags = {
     Environment = var.environment
@@ -95,7 +95,7 @@ data "aws_iam_policy_document" "dynamodb-table-access" {
 }
 
 resource "aws_iam_policy" "dynamodb-table-access" {
-  name   = "mhs-${var.environment}-dynamodb-table-access"
+  name   = "mhs-${var.environment}-${var.cluster_name}-dynamodb-table-access"
   policy = data.aws_iam_policy_document.dynamodb-table-access.json
 }
 

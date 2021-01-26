@@ -28,6 +28,31 @@ variable "spineroutelookup_service_disable_sds_tls" {
 
 variable "mhs_log_level" {}
 
+variable "mhs_route_service_minimum_instance_count" {
+  description = "The minimum number of instances of MHS route service to run. This will be the number of instances deployed initially."
+}
+
+variable "mhs_route_service_maximum_instance_count" {
+  description = "The maximum number of instances of MHS route service to run."
+}
+
 variable "build_id" {
   description = "ID used to identify the current build such as a commit sha."
+}
+
+variable "deregistration_delay" {
+  default = 30
+}
+
+variable "allowed_mhs_clients" {
+  default = "10.0.0.0/8"
+  description = "Network from which MHS ALBs should allow connections"
+}
+
+variable "route_alb_certificate_arn" {
+  description = "ARN of the TLS certificate that the route load balancer should present. This can be a certificate stored in IAM or ACM."
+}
+
+variable "opentest_cidr" {
+  default = "192.168.128.0/24"
 }
