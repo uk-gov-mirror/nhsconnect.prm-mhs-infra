@@ -186,7 +186,8 @@ resource "aws_security_group" "mhs_outbound" {
 }
 
 resource "aws_lb" "outbound_alb" {
-  name = "${var.environment}-${var.cluster_name}-mhs-outbound-alb"
+  # Name length limited to 32 chars
+  name = "${var.environment}-${var.cluster_name}-mhs-out-alb"
   internal = true
   load_balancer_type = "application"
   subnets = local.mhs_private_subnet_ids
@@ -288,9 +289,8 @@ resource "aws_route53_record" "mhs_outbound_load_balancer_record" {
   }
 }
 
-# TODO: What about test harness URL?
 resource "aws_ssm_parameter" "outbound_url" {
-  name = "/repo/${var.environment}/output/${var.repo_name}/mhs-outbound-url"
+  name = "/repo/${var.environment}/output/${var.repo_name}/${var.cluster_name}-mhs-outbound-url"
   type  = "String"
   value = trimsuffix("https://${aws_route53_record.mhs_outbound_load_balancer_record.name}", ".")
   tags = {
