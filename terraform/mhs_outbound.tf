@@ -140,10 +140,9 @@ resource "aws_security_group" "mhs_outbound" {
     CreatedBy = var.repo_name
   }
 
-  # TODO: Do we need this?
   egress {
-    from_port = 389
-    to_port = 389
+    from_port = 443
+    to_port = 443
     protocol = "tcp"
     cidr_blocks = [var.opentest_cidr]
     description = "MHS outbound egress to opentest, including SDS and spine"
