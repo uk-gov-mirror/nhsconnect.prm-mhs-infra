@@ -322,3 +322,14 @@ resource "aws_route53_record" "mhs_route_load_balancer_record" {
   }
 }
 
+# TODO: What about test harness URL?
+resource "aws_ssm_parameter" "route_url" {
+  name = "/repo/${var.environment}/output/${var.repo_name}/mhs-route-url"
+  type  = "String"
+  value = trimsuffix("https://${aws_route53_record.mhs_route_load_balancer_record.name}", ".")
+  tags = {
+    Environment = var.environment
+    CreatedBy = var.repo_name
+  }
+}
+
