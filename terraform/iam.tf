@@ -88,8 +88,8 @@ data "aws_iam_policy_document" "dynamodb-table-access" {
     ]
 
     resources = [
-      "arn:aws:dynamodb:${var.region}:${data.aws_caller_identity.current.account_id}:table/${var.environment}-mhs-state",
-      "arn:aws:dynamodb:${var.region}:${data.aws_caller_identity.current.account_id}:table/${var.environment}-mhs-sync-async-state"
+      "arn:aws:dynamodb:${var.region}:${data.aws_caller_identity.current.account_id}:table/${var.environment}-${var.cluster_name}-mhs-state",
+      "arn:aws:dynamodb:${var.region}:${data.aws_caller_identity.current.account_id}:table/${var.environment}-${var.cluster_name}-mhs-sync-async-state"
     ]
   }
 }
