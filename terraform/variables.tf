@@ -9,6 +9,24 @@ variable "mhs_state_table_write_capacity" {}
 variable "mhs_sync_async_table_read_capacity" {}
 variable "mhs_sync_async_table_write_capacity" {}
 
+variable "nlb_deletion_protection" { default = true }
+
+variable "recipient_ods_code" {
+  description = "ODS code that was used for the MHS (CMA endpoint) registration"
+}
+
+variable "inbound_queue_name" {
+  default = "inbound"
+}
+
+variable "inbound_raw_queue_name" {
+  default = "raw-inbound"
+}
+
+variable "mhs_inbound_service_minimum_instance_count" {
+  description = "The minimum number of instances of MHS inbound to run. This will be the number of instances deployed initially."
+}
+
 variable "elasticache_node_type" {
   description = "The type of ElastiCache node to use when deploying the ElastiCache cluster. Possible node types can be found from https://aws.amazon.com/elasticache/features/#Available_Cache_Node_Types"
 }
