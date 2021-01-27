@@ -283,8 +283,8 @@ resource "aws_route53_record" "mhs_outbound_load_balancer_record" {
   type = "A"
 
   alias {
-    name = aws_lb.route_alb.dns_name
-    zone_id = aws_lb.route_alb.zone_id
+    name = aws_lb.outbound_alb.dns_name
+    zone_id = aws_lb.outbound_alb.zone_id
     evaluate_target_health = false
   }
 }
