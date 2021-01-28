@@ -1,24 +1,50 @@
 format_version: 4
 common:
-  deploy_tasks: &deploy_tasks
+  repo_deploy_tasks: &repo_deploy_tasks
     - exec:
         command: /bin/bash
         working_directory: prm-mhs-infra
         arguments:
           - -c
-          - ./tasks generate_certs
+          - ./tasks generate_certs repo
     - exec:
         command: /bin/bash
         working_directory: prm-mhs-infra
         arguments:
           - -c
-          - ./tasks upload_certs
+          - ./tasks upload_certs repo
     - exec:
         command: /bin/bash
         working_directory: prm-mhs-infra
         arguments:
           - -c
-          - ./tasks tf_plan create
+          - ./tasks tf_plan_repo create
+    - exec:
+        command: /bin/bash
+        working_directory: prm-mhs-infra
+        arguments:
+          - -c
+          - ./tasks tf_apply
+
+  test_harness_deploy_tasks: &test_harness_deploy_tasks
+    - exec:
+        command: /bin/bash
+        working_directory: prm-mhs-infra
+        arguments:
+          - -c
+          - ./tasks generate_certs test_harness
+    - exec:
+        command: /bin/bash
+        working_directory: prm-mhs-infra
+        arguments:
+          - -c
+          - ./tasks upload_certs test_harness
+    - exec:
+        command: /bin/bash
+        working_directory: prm-mhs-infra
+        arguments:
+          - -c
+          - ./tasks tf_plan_test_harness create
     - exec:
         command: /bin/bash
         working_directory: prm-mhs-infra
@@ -53,36 +79,14 @@ pipelines:
       - deploy:
           clean_workspace: true
           jobs:
-            deploy:
+            repo:
               resources:
                 - docker
-              tasks: *deploy_tasks
-      - wait_dns:
-          clean_workspace: true
-          resources:
-            - dev
-            - mhs
-          tasks:
-            - exec:
-                command: /bin/bash
-                working_directory: prm-mhs-infra
-                arguments:
-                  - -c
-                  - ./tasks wait_for_dns
-      - test:
-          clean_workspace: true
-          jobs:
-            dns:
+              tasks: *repo_deploy_tasks
+            test_harness:
               resources:
-                - dev
-                - mhs
-              tasks:
-                - exec:
-                    command: /bin/bash
-                    working_directory: prm-mhs-infra
-                    arguments:
-                      - -c
-                      - ./tasks test_dns
+                - docker
+              tasks: *test_harness_deploy_tasks
 
   "prm-mhs-infra-ptl-integration":
     group: mhs
@@ -106,7 +110,7 @@ pipelines:
         stage: test
       dev_env:
         pipeline: prm-mhs-infra-opentest
-        stage: test
+        stage: deploy
     environment_variables:
       NHS_ENVIRONMENT: test
     stages:
@@ -117,7 +121,7 @@ pipelines:
               resources:
                 - docker
               tasks:
-                - *deploy_tasks
+                - *repo_deploy_tasks
                 - exec:
                     command: /bin/bash
                     working_directory: prm-mhs-infra
