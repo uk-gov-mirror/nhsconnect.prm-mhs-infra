@@ -24,22 +24,6 @@ data "aws_ssm_parameter" "dns_ip_address_1" {
 
 data "aws_caller_identity" "current" {}
 
-data "aws_ssm_parameter" "party-key" {
-  name = "/repo/${var.environment}/user-input/mhs-party-key"
-}
-
-data "aws_ssm_parameter" "client-cert" {
-  name = "/repo/${var.environment}/user-input/mhs-client-cert"
-}
-
-data "aws_ssm_parameter" "client-key" {
-  name = "/repo/${var.environment}/user-input/mhs-client-key"
-}
-
-data "aws_ssm_parameter" "ca-certs" {
-  name = "/repo/${var.environment}/user-input/mhs-ca-certs"
-}
-
 data "aws_vpc_endpoint" "mhs-dynamodb" {
   vpc_id       = local.mhs_vpc_id
   service_name = "com.amazonaws.${var.region}.dynamodb"
@@ -71,10 +55,4 @@ locals {
   # TODO: Move to MHS common
   mhs_route53_zone_id = data.aws_route53_zone.mhs.id
   mhs_route53_zone_name  = data.aws_route53_zone.mhs.name
-
-  # MHS secrets to connect with spine
-  party_key_arn=data.aws_ssm_parameter.party-key.arn
-  client_cert_arn=data.aws_ssm_parameter.client-cert.arn
-  client_key_arn=data.aws_ssm_parameter.client-key.arn
-  ca_certs_arn=data.aws_ssm_parameter.ca-certs.arn
 }

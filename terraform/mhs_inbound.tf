@@ -10,6 +10,22 @@ data "aws_ssm_parameter" "amqp-endpoint-active" {
   name = "/repo/${var.environment}/output/prm-deductions-infra/amqp-endpoint-active"
 }
 
+data "aws_ssm_parameter" "party-key" {
+  name = "/repo/${var.environment}/user-input/${var.cluster_name}-mhs-party-key"
+}
+
+data "aws_ssm_parameter" "client-cert" {
+  name = "/repo/${var.environment}/user-input/${var.cluster_name}-mhs-client-cert"
+}
+
+data "aws_ssm_parameter" "client-key" {
+  name = "/repo/${var.environment}/user-input/${var.cluster_name}-mhs-client-key"
+}
+
+data "aws_ssm_parameter" "ca-certs" {
+  name = "/repo/${var.environment}/user-input/${var.cluster_name}-mhs-ca-certs"
+}
+
 locals {
   inbound_queue_username_arn=data.aws_ssm_parameter.mq-app-username.arn
   inbound_queue_password_arn=data.aws_ssm_parameter.mq-app-password.arn
@@ -17,6 +33,12 @@ locals {
   inbound_queue_host=replace(data.aws_ssm_parameter.amqp-endpoint-active.value, "amqp+ssl", "amqps")
 
   domain_suffix = "${var.environment}-${var.recipient_ods_code}"
+
+  # MHS secrets to connect with spine
+  party_key_arn=data.aws_ssm_parameter.party-key.arn
+  client_cert_arn=data.aws_ssm_parameter.client-cert.arn
+  client_key_arn=data.aws_ssm_parameter.client-key.arn
+  ca_certs_arn=data.aws_ssm_parameter.ca-certs.arn
 }
 
 resource "aws_ecs_cluster" "mhs_inbound_cluster" {
