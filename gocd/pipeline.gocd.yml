@@ -67,9 +67,6 @@ pipelines:
       docker:
         pipeline: mhs-docker-images
         stage: build
-      docker_dns_images:
-        pipeline: mhs-dns-images
-        stage: test
       deductions_infra:
         pipeline: prm-deductions-infra
         stage: check_dev
@@ -105,9 +102,6 @@ pipelines:
       docker:
         pipeline: mhs-docker-images
         stage: build
-      docker_dns_images:
-        pipeline: mhs-dns-images
-        stage: test
       dev_env:
         pipeline: prm-mhs-infra-opentest
         stage: deploy
