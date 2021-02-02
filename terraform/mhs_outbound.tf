@@ -144,8 +144,8 @@ resource "aws_security_group" "mhs_outbound" {
     from_port = 443
     to_port = 443
     protocol = "tcp"
-    cidr_blocks = [var.opentest_cidr]
-    description = "MHS outbound egress to opentest, including SDS and spine"
+    cidr_blocks = [var.spine_cidr]
+    description = "MHS outbound egress to SDS and spine"
   }
 
   egress {

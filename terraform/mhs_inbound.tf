@@ -214,7 +214,7 @@ resource "aws_ecs_service" "mhs_inbound_service" {
 
 # MHS inbound security group
 resource "aws_security_group" "mhs_inbound_security_group" {
-  name = "MHS Inbound Security Group"
+  name = "${var.environment}-mhs-inbound-sg"
   description = "The security group used to control traffic for the MHS Inbound component."
   vpc_id = local.mhs_vpc_id
 

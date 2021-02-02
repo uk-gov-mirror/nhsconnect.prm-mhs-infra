@@ -156,11 +156,11 @@ resource "aws_security_group" "mhs_route" {
   }
 
   egress {
-    from_port = 389
-    to_port = 389
+    from_port = var.sds_port
+    to_port = var.sds_port
     protocol = "tcp"
-    cidr_blocks = [var.opentest_cidr]
-    description = "MHS route egress to opentest, including SDS and spine"
+    cidr_blocks = [var.spine_cidr]
+    description = "MHS route egress to SDS and spine"
   }
 
   egress {
