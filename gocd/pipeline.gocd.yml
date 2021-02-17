@@ -105,6 +105,9 @@ pipelines:
       dev_env:
         pipeline: prm-mhs-infra-opentest
         stage: deploy
+      deductions_infra:
+        pipeline: prm-deductions-infra
+        stage: check_test
     environment_variables:
       NHS_ENVIRONMENT: test
     stages:
