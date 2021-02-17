@@ -168,19 +168,6 @@ case "${command}" in
       check_env
       dojo "./tasks _tf_apply"
       ;;
-  _nlb_ips)
-      cd terraform-patch
-      terraform init -backend-config key=${NHS_SERVICE}-${NHS_ENVIRONMENT}/terraform-patch.tfstate
-      if [ "$2" == "create" ]; then
-        terraform apply -auto-approve -var environment=$NHS_ENVIRONMENT
-      elif [ "$2" == "destroy" ]; then
-        terraform destroy -var environment=$NHS_ENVIRONMENT
-      fi
-      ;;
-  nlb_ips)
-      check_env
-      dojo "./tasks _nlb_ips $2"
-      ;;
   _generate_certs)
       check_env
       cluster_name=$2

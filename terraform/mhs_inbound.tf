@@ -307,18 +307,40 @@ resource "aws_lb" "inbound_nlb" {
   name = "${var.environment}-${var.cluster_name}-mhs-inbound"
   internal = true
   load_balancer_type = "network"
-  subnets = local.mhs_private_subnet_ids
   enable_cross_zone_load_balancing = true
-  # We turn-on deletion protection to force you to read this note before deletion:
-  # Whenever the NLB is re-deployed in HSCN network, it's ipaddresses will change and
-  # you need to submit a DNS update form manually. See ./tasks nlb_ips
-  enable_deletion_protection = var.nlb_deletion_protection
+  enable_deletion_protection = false
+
+  subnet_mapping {
+    subnet_id            = tolist(local.mhs_private_subnet_ids)[0]
+    private_ipv4_address = var.nlb_private_ips[0]
+  }
+
+  subnet_mapping {
+    subnet_id            = tolist(local.mhs_private_subnet_ids)[1]
+    private_ipv4_address = var.nlb_private_ips[1]
+  }
+
+  subnet_mapping {
+    subnet_id            = tolist(local.mhs_private_subnet_ids)[2]
+    private_ipv4_address = var.nlb_private_ips[2]
+  }
 
   tags = {
     Name = "${var.environment}-${var.cluster_name}-mhs-inbound"
     Environment = var.environment
     CreatedBy = var.repo_name
   }
+}
+
+# Public DNS record for the MHS inbound component
+resource "aws_route53_record" "public_mhs_inbound_load_balancer_record" {
+  count = var.setup_public_dns_record == "true" ? 1 : 0
+  zone_id = data.aws_ssm_parameter.public_root_zone_id.value
+  name = aws_lb.inbound_nlb.dns_name
+  type = "A"
+  ttl = 600
+
+  records = var.nlb_private_ips
 }
 
 # Target group for the network load balancer for MHS inbound port 443

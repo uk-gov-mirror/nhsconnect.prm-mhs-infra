@@ -119,9 +119,3 @@ pipelines:
                 - docker
               tasks:
                 - *repo_deploy_tasks
-                - exec:
-                    command: /bin/bash
-                    working_directory: prm-mhs-infra
-                    arguments:
-                      - -c
-                      - ./tasks nlb_ips create

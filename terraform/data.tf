@@ -56,3 +56,7 @@ locals {
   mhs_route53_zone_id = data.aws_route53_zone.mhs.id
   mhs_route53_zone_name  = data.aws_route53_zone.mhs.name
 }
+
+data "aws_ssm_parameter" "public_root_zone_id" {
+  name = "/repo/output/prm-deductions-base-infra/root-zone-id"
+}
