@@ -336,7 +336,7 @@ resource "aws_lb" "inbound_nlb" {
 resource "aws_route53_record" "public_mhs_inbound_load_balancer_record" {
   count = var.setup_public_dns_record == "true" ? 1 : 0
   zone_id = data.aws_ssm_parameter.public_root_zone_id.value
-  name = aws_lb.inbound_nlb.dns_name
+  name = "mhs-inbound-${var.environment}-${lower(var.recipient_ods_code)}.mhs"
   type = "A"
   ttl = 600
 
