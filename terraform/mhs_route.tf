@@ -113,6 +113,7 @@ resource "aws_ecs_service" "mhs_route_service" {
   deployment_minimum_healthy_percent = 100
   desired_count = var.mhs_route_service_minimum_instance_count
   launch_type = "FARGATE"
+  platform_version = "1.3.0"
   scheduling_strategy = "REPLICA"
   task_definition = aws_ecs_task_definition.mhs_route_task.arn
 
