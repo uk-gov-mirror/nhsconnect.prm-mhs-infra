@@ -1,0 +1,27 @@
+{
+  "name": "prm-mhs-infra",
+  "version": "1.0.0",
+  "description": "Set-up of infrastructure for MHS.",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nhsconnect/prm-mhs-infra.git"
+  },
+  "scripts": {
+    "test": "jest test/"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.13.14",
+    "@babel/core": "^7.13.14",
+    "@babel/node": "^7.13.13",
+    "@babel/plugin-transform-runtime": "^7.13.10",
+    "@babel/preset-env": "^7.13.12",
+    "axios": "^0.21.1",
+    "jest": "^26.6.3"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/nhsconnect/prm-mhs-infra/issues"
+  },
+  "homepage": "https://github.com/nhsconnect/prm-mhs-infra#readme"
+}

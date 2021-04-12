@@ -140,6 +140,15 @@ function get_aws_value {
 
 command="$1"
 case "${command}" in
+  _test)
+      npm install
+      npm run test
+      ;;
+  test)
+      check_env
+      export NODE_EXTRA_CA_CERTS=certs/deductions.crt
+      dojo -c Dojofile-node "./tasks _test"
+      ;;
   tf)
       check_env
       dojo "bash"

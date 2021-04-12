@@ -1,3 +1,6 @@
+# IntelliJ
+.idea
+
 /terraform/transit-opentest/ssh/
 /terraform/ssh/
 .terraform/
@@ -5,4 +8,8 @@
 *.tfstate
 tf-out.json
 terraform.tfstate*
+
+node_modules/
+
+
 
