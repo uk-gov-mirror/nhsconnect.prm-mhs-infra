@@ -67,6 +67,9 @@ pipelines:
       docker:
         pipeline: mhs-docker-images
         stage: build
+      mhs_docker:
+        pipeline: prm-repo-mhs
+        stage: build_docker
       deductions_infra:
         pipeline: prm-deductions-infra
         stage: check_dev

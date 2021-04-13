@@ -10,7 +10,7 @@ IMAGE_REPO_NAME=mhs-unbound-dns
 CERTIFICATES_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )/mhs-certs"
 
 if [ -z "${MHS_IMAGE_TAG}" ]; then
-  MHS_IMAGE_TAG="${GO_REVISION_INTEGRATION_ADAPTORS}"
+  MHS_IMAGE_TAG="${GO_DEPENDENCY_LABEL_MHS_DOCKER}"
 fi
 
 if [ -z "${DNS_IMAGE_TAG}" ]; then
