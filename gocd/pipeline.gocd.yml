@@ -122,6 +122,9 @@ pipelines:
       dev_env:
         pipeline: prm-mhs-infra-opentest
         stage: deploy
+      mhs_docker:
+        pipeline: prm-repo-mhs
+        stage: build_docker
       deductions_infra:
         pipeline: prm-deductions-infra
         stage: check_test
