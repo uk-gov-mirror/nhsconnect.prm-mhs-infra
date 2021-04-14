@@ -25,6 +25,12 @@ common:
         arguments:
           - -c
           - ./tasks tf_apply
+    - exec:
+        command: /bin/bash
+        working_directory: prm-mhs-infra
+        arguments:
+          - -c
+          - ./tasks wait_ecs repo
 
   test_harness_deploy_tasks: &test_harness_deploy_tasks
     - exec:
@@ -51,6 +57,12 @@ common:
         arguments:
           - -c
           - ./tasks tf_apply
+    - exec:
+        command: /bin/bash
+        working_directory: prm-mhs-infra
+        arguments:
+          - -c
+          - ./tasks wait_ecs test_harness
 
 pipelines:
   "prm-mhs-infra-opentest":

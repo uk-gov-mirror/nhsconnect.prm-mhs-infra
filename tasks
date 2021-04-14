@@ -247,6 +247,27 @@ case "${command}" in
       check_cluster_name $cluster_name
       dojo "./tasks _upload_certs $cluster_name"
       ;;
+  _wait_ecs)
+      cluster_name=$2
+      check_cluster_name $cluster_name
+      if [[ $cluster_name == "test_harness" ]]; then
+        aws ecs wait services-stable \
+          --region $AWS_DEFAULT_REGION \
+          --cluster $NHS_ENVIRONMENT-test-harness-mhs-route-cluster \
+          --service $NHS_ENVIRONMENT-test-harness-mhs-route
+      else
+        aws ecs wait services-stable \
+          --region $AWS_DEFAULT_REGION \
+          --cluster $NHS_ENVIRONMENT-repo-mhs-route-cluster \
+          --service $NHS_ENVIRONMENT-repo-mhs-route
+      fi
+      ;;
+  wait_ecs)
+      cluster_name=$2
+      check_cluster_name $cluster_name
+      check_env
+      dojo "./tasks _wait_ecs $cluster_name"
+      ;;
   *)
       echo "Invalid command: '${command}'"
       exit 1
