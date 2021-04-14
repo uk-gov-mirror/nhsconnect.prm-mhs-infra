@@ -69,7 +69,7 @@ resource "aws_ecs_task_definition" "mhs_route_task" {
         },
         {
           name = "MHS_SECRET_CA_CERTS"
-          valueFrom = local.ca_certs_arn
+          valueFrom = local.route_ca_certs_arn
         }
       ]
       essential = true

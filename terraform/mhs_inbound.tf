@@ -26,6 +26,10 @@ data "aws_ssm_parameter" "ca-certs" {
   name = "/repo/${var.environment}/user-input/${var.cluster_name}-mhs-ca-certs"
 }
 
+data "aws_ssm_parameter" "route-ca-certs" {
+  name = "/repo/${var.environment}/user-input/${var.cluster_name}-mhs-route-ca-certs"
+}
+
 locals {
   inbound_queue_username_arn=data.aws_ssm_parameter.mq-app-username.arn
   inbound_queue_password_arn=data.aws_ssm_parameter.mq-app-password.arn
@@ -39,6 +43,7 @@ locals {
   client_cert_arn=data.aws_ssm_parameter.client-cert.arn
   client_key_arn=data.aws_ssm_parameter.client-key.arn
   ca_certs_arn=data.aws_ssm_parameter.ca-certs.arn
+  route_ca_certs_arn=data.aws_ssm_parameter.route-ca-certs.arn
 }
 
 resource "aws_ecs_cluster" "mhs_inbound_cluster" {
