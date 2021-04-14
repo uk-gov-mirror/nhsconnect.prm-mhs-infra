@@ -23,7 +23,7 @@ resource "aws_ecs_task_definition" "mhs_outbound_task" {
   [
     {
       name = "mhs-outbound"
-      image = "${local.ecr_address}/mhs-outbound:${var.build_id}"
+      image = "${local.ecr_address}/mhs-outbound:${var.fork_build_id}"
       environment = var.mhs_outbound_http_proxy == "" ? concat(local.mhs_outbound_base_environment_vars,
       [
         {
