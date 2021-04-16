@@ -250,17 +250,23 @@ case "${command}" in
   _wait_ecs)
       cluster_name=$2
       check_cluster_name $cluster_name
+
+      CLUSTER_NAME=$cluster_name
       if [[ $cluster_name == "test_harness" ]]; then
-        aws ecs wait services-stable \
-          --region $AWS_DEFAULT_REGION \
-          --cluster $NHS_ENVIRONMENT-test-harness-mhs-route-cluster \
-          --service $NHS_ENVIRONMENT-test-harness-mhs-route
-      else
-        aws ecs wait services-stable \
-          --region $AWS_DEFAULT_REGION \
-          --cluster $NHS_ENVIRONMENT-repo-mhs-route-cluster \
-          --service $NHS_ENVIRONMENT-repo-mhs-route
+        CLUSTER_NAME=test-harness
       fi
+
+      # Wait for route
+      aws ecs wait services-stable \
+        --region $AWS_DEFAULT_REGION \
+        --cluster $NHS_ENVIRONMENT-$CLUSTER_NAME-mhs-route-cluster \
+        --service $NHS_ENVIRONMENT-$CLUSTER_NAME-mhs-route
+
+      # Wait for outbound
+      aws ecs wait services-stable \
+        --region $AWS_DEFAULT_REGION \
+        --cluster $NHS_ENVIRONMENT-$CLUSTER_NAME-mhs-outbound-cluster \
+        --service $NHS_ENVIRONMENT-$CLUSTER_NAME-mhs-outbound
       ;;
   wait_ecs)
       cluster_name=$2
