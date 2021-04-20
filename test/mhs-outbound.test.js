@@ -22,10 +22,10 @@ describe('MHS Outbound', () => {
       headers: {
         'Content-Type': 'application/json',
         'Interaction-ID': interactionId,
-        'Sync-Async': false,
         'Correlation-Id': conversationId,
         'Ods-Code': 'YES',
         'from-asid': repoAsid,
+        'wait-for-response': false
       },
       adapter
     };
@@ -33,6 +33,6 @@ describe('MHS Outbound', () => {
     const res = await axios.post(mhsOutboundUrl, body, headers)
 
     expect(res.status).toEqual(200);
-    expect(res.data).toContain(gpOdsCode)
+    expect(res.data).toContain(gpOdsCode);
   });
 });
